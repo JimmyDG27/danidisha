@@ -219,6 +219,84 @@ footer { background: var(--bg2); border-top: 1px solid var(--border); padding: 6
     color: var(--off); transition: color 0.25s;
   }
   .ig-link:hover { color: var(--orange); }
+
+/* ── MOBILE NAV ── */
+.nav-hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  z-index: 1002;
+}
+.nav-hamburger span {
+  display: block;
+  width: 24px;
+  height: 1.5px;
+  background: var(--white);
+  transition: all 0.3s ease;
+  transform-origin: center;
+}
+.nav-hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.nav-hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.nav-hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+.nav-mobile-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 999;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.3s;
+}
+.nav-mobile-overlay.open { opacity: 1; pointer-events: all; }
+.nav-mobile {
+  position: fixed;
+  top: 0; right: 0;
+  width: 280px; height: 100%;
+  background: #0e0e0e;
+  border-left: 1px solid rgba(255,255,255,0.07);
+  z-index: 1000;
+  padding: 100px 40px 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  transform: translateX(100%);
+  transition: transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94);
+}
+.nav-mobile.open { transform: translateX(0); }
+.nav-mobile a {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.65);
+  text-decoration: none;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  transition: color 0.2s;
+  display: block;
+}
+.nav-mobile a:last-of-type { border-bottom: none; }
+.nav-mobile a:hover { color: #fff; }
+.nav-mobile .nav-mobile-cta {
+  margin-top: 28px;
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #0a0a0a !important;
+  background: var(--orange, #e8732a);
+  border-radius: 8px;
+  padding: 16px 24px;
+  text-align: center;
+  border-bottom: none !important;
+}
+.nav-mobile .nav-mobile-cta:hover { background: var(--orange-l, #f08c4a); }
+@media (max-width: 900px) {
+  .nav-hamburger { display: flex; }
+}
 </style>
 </head>
 <body>
@@ -234,7 +312,18 @@ footer { background: var(--bg2); border-top: 1px solid var(--border); padding: 6
     <li><a href="/for-companies">За компании</a></li>
     <li><a href="/contact" class="nav-cta">Запиши час</a></li>
   </ul>
+<button class="nav-hamburger" id="navHamburger" aria-label="Меню">
+  <span></span><span></span><span></span>
+</button>
 </nav>
+
+<div class="nav-mobile-overlay" id="navOverlay"></div>
+<div class="nav-mobile" id="navMobile">
+  <a href="/about">За мен</a>
+  <a href="/individual-therapies">Индивидуални терапии</a>
+  <a href="/for-companies">За компании</a>
+  <a href="/contact" class="nav-mobile-cta">Запиши час</a>
+</div>
 
 <main class="page">
 
@@ -391,5 +480,23 @@ function submitForm() {
   }, 400);
 }
 </script>
+
+// Mobile nav toggle
+(function(){
+  var btn = document.getElementById('navHamburger');
+  var menu = document.getElementById('navMobile');
+  var overlay = document.getElementById('navOverlay');
+  if(!btn) return;
+  function toggle(open){
+    btn.classList.toggle('open', open);
+    menu.classList.toggle('open', open);
+    overlay.classList.toggle('open', open);
+    document.body.style.overflow = open ? 'hidden' : '';
+  }
+  btn.addEventListener('click', function(){ toggle(!menu.classList.contains('open')); });
+  overlay.addEventListener('click', function(){ toggle(false); });
+  menu.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', function(){ toggle(false); }); });
+})();
+
 </body>
 </html>
