@@ -35,7 +35,8 @@ body.hovering .cursor-ring { width: 56px; height: 56px; border-color: var(--oran
 /* NAV */
 nav { position: fixed; top: 0; left: 0; right: 0; z-index: 500; padding: 28px 56px; display: flex; align-items: center; justify-content: space-between; transition: padding 0.4s, background 0.4s, border-color 0.4s; border-bottom: 1px solid transparent; }
 nav.scrolled { padding: 16px 56px; background: rgba(10,10,10,0.95); backdrop-filter: blur(20px); border-bottom-color: var(--border); }
-.nav-logo { font-family: var(--serif); font-size: 20px; font-weight: 300; color: var(--white); letter-spacing: 0.08em; }
+.nav-logo { font-family: var(--serif); font-size: 20px; font-weight: 300; color: var(--white); letter-spacing: 0.08em; display: flex; align-items: center; gap: 10px; }
+.nav-logo-img { height: 32px; width: auto; display: block; filter: brightness(0) invert(1); opacity: 0.9; }
 .nav-logo span { color: var(--orange); }
 .nav-links { display: flex; align-items: center; gap: 40px; list-style: none; }
 .nav-links a { font-size: 11px; font-weight: 400; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); transition: color 0.25s; position: relative; }
@@ -68,7 +69,7 @@ nav.scrolled { padding: 16px 56px; background: rgba(10,10,10,0.95); backdrop-fil
 }
 .hero-bg {
   position: absolute; inset: 0;
-  background: url('https://picsum.photos/id/1062/1800/1000') center/cover no-repeat;
+  background: url('images/about-hero.jpg') center 25%/cover no-repeat;
   transform: scale(1.12);
   transition: transform 9s cubic-bezier(0.25,0.46,0.45,0.94);
   will-change: transform;
@@ -191,7 +192,7 @@ nav.scrolled { padding: 16px 56px; background: rgba(10,10,10,0.95); backdrop-fil
     position: relative; margin-bottom: 0;
   }
   .story-img-wrap img {
-    width: 100%; aspect-ratio: 3/4; object-fit: cover; display: block;
+    width: 100%; aspect-ratio: 3/4; object-fit: cover; object-position: center 15%; display: block;
     filter: brightness(0.75) contrast(1.05);
   }
   .story-img-frame {
@@ -482,6 +483,16 @@ footer { background: var(--bg2); border-top: 1px solid var(--border); padding: 8
 .nav-mobile .nav-mobile-cta:hover { background: var(--orange-l, #f08c4a); }
 @media (max-width: 900px) {
   .nav-hamburger { display: flex; }
+  .story-content { grid-template-columns: 1fr; gap: 40px; }
+  .story-visual { position: static; }
+  .story-img-wrap img { aspect-ratio: 4/3; }
+  .story-img-frame { display: none; }
+  .story-stats { gap: 0; }
+  .hero-sub { font-size: 15px; }
+  .hero-cta { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
+  .cta-btns { flex-direction: column; align-items: center; }
+  .cta-btns a { width: 100%; max-width: 300px; text-align: center; }
+  .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
 }
 </style>
 </head>
@@ -492,7 +503,7 @@ footer { background: var(--bg2); border-top: 1px solid var(--border); padding: 8
 
 <!-- NAV -->
 <nav id="nav">
-  <a href="/" class="nav-logo">Danny <span>Disha</span></a>
+  <a href="/" class="nav-logo"><img src="images/logo.png" alt="Danny Disha logo" class="nav-logo-img">Danny <span>Disha</span></a>
   <ul class="nav-links">
     <li><a href="/about" class="nav-active">За мен</a></li>
     <li><a href="/individual-therapies">Индивидуални терапии</a></li>
@@ -553,7 +564,7 @@ footer { background: var(--bg2); border-top: 1px solid var(--border); padding: 8
 
     <div class="story-visual reveal-r" style="transition-delay:0.15s">
       <div class="story-img-wrap">
-        <img src="https://picsum.photos/id/1084/700/900" alt="Даниел Липчев">
+        <img src="images/about-story.jpg" alt="Даниел Липчев">
         <div class="story-img-frame"></div>
       </div>
       <div class="story-stats">
@@ -747,6 +758,7 @@ const io = new IntersectionObserver(entries=>{
 document.querySelectorAll('.reveal,.reveal-l,.reveal-r').forEach(el=>io.observe(el));
 </script>
 
+<script>
 // Mobile nav toggle
 (function(){
   var btn = document.getElementById('navHamburger');
@@ -763,6 +775,7 @@ document.querySelectorAll('.reveal,.reveal-l,.reveal-r').forEach(el=>io.observe(
   overlay.addEventListener('click', function(){ toggle(false); });
   menu.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', function(){ toggle(false); }); });
 })();
+</script>
 
 </body>
 </html>

@@ -15,7 +15,8 @@ body{font-family:var(--sans);background:var(--bg);color:var(--white);overflow-x:
 body.hovering .cursor-ring{width:56px;height:56px;border-color:var(--orange);}
 nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:28px 56px;display:flex;align-items:center;justify-content:space-between;transition:padding 0.4s,background 0.4s,border-color 0.4s;border-bottom:1px solid transparent;}
 nav.scrolled{padding:16px 56px;background:rgba(10,10,10,0.95);backdrop-filter:blur(20px);border-bottom-color:var(--border);}
-.nav-logo{font-family:var(--serif);font-size:20px;font-weight:300;color:var(--white);letter-spacing:0.08em;}.nav-logo span{color:var(--orange);}
+.nav-logo{font-family:var(--serif);font-size:20px;font-weight:300;color:var(--white);letter-spacing:0.08em;display:flex;align-items:center;gap:10px;}
+.nav-logo-img{height:32px;width:auto;display:block;filter:brightness(0) invert(1);opacity:0.9;}.nav-logo span{color:var(--orange);}
 .nav-links{display:flex;align-items:center;gap:40px;list-style:none;}
 .nav-links a{font-size:11px;font-weight:400;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);transition:color 0.25s;position:relative;}
 .nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;background:var(--orange);transform:scaleX(0);transform-origin:right;transition:transform 0.3s;}
@@ -33,7 +34,7 @@ nav.scrolled{padding:16px 56px;background:rgba(10,10,10,0.95);backdrop-filter:bl
 @keyframes lineUp{to{opacity:1;transform:translateY(0);}}@keyframes fadeUp{to{opacity:1;transform:translateY(0);}}
 
 .hero{position:relative;height:100vh;min-height:680px;display:flex;align-items:flex-end;overflow:hidden;}
-.hero-bg{position:absolute;inset:0;background:url('https://picsum.photos/id/1035/1800/1000') center/cover no-repeat;transform:scale(1.08);transition:transform 9s cubic-bezier(0.25,0.46,0.45,0.94);will-change:transform;}
+.hero-bg{position:absolute;inset:0;background:url('images/corporate-retreat.jpg') center 20%/cover no-repeat;transform:scale(1.08);transition:transform 9s cubic-bezier(0.25,0.46,0.45,0.94);will-change:transform;}
 .hero-bg.loaded{transform:scale(1.02);}
 .hero-vignette{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,10,1) 0%,rgba(10,10,10,0.72) 45%,rgba(10,10,10,0.15) 80%),linear-gradient(to right,rgba(10,10,10,0.65) 0%,transparent 60%);}
 .hero-content{position:relative;z-index:2;padding:0 56px 90px;max-width:860px;}
@@ -250,8 +251,16 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:80px 56p
   border-bottom: none !important;
 }
 .nav-mobile .nav-mobile-cta:hover { background: var(--orange-l, #f08c4a); }
-@media (max-width: 900px) {
+@media(max-width:900px){
   .nav-hamburger { display: flex; }
+  .hero-actions { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .hero-actions a { display: block; max-width: 300px; text-align: center; }
+  .structures-grid { grid-template-columns: 1fr; }
+  .comp-footer { flex-direction: column; gap: 16px; text-align: center; }
+  .comp-footer-cta { align-self: center; }
+  .cta-btns { flex-direction: column; align-items: center; }
+  .cta-btns a { width: 100%; max-width: 300px; text-align: center; }
+  .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
 }
 </style>
 </head>
@@ -259,7 +268,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:80px 56p
 <div class="cursor" id="cur"></div>
 <div class="cursor-ring" id="ring"></div>
 <nav id="nav">
-  <a href="/" class="nav-logo">Danny <span>Disha</span></a>
+  <a href="/" class="nav-logo"><img src="images/logo.png" alt="Danny Disha logo" class="nav-logo-img">Danny <span>Disha</span></a>
   <ul class="nav-links">
     <li><a href="/about">За мен</a></li>
     <li><a href="/individual-therapies">Индивидуални терапии</a></li>
@@ -476,6 +485,7 @@ const io=new IntersectionObserver(entries=>{entries.forEach(e=>{if(!e.isIntersec
 document.querySelectorAll('.reveal,.reveal-l,.reveal-r').forEach(el=>io.observe(el));
 </script>
 
+<script>
 // Mobile nav toggle
 (function(){
   var btn = document.getElementById('navHamburger');
@@ -492,6 +502,7 @@ document.querySelectorAll('.reveal,.reveal-l,.reveal-r').forEach(el=>io.observe(
   overlay.addEventListener('click', function(){ toggle(false); });
   menu.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', function(){ toggle(false); }); });
 })();
+</script>
 
 </body>
 </html>

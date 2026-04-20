@@ -48,7 +48,8 @@ nav {
   border-bottom: 1px solid transparent;
 }
 nav.scrolled { padding: 16px 56px; background: rgba(10,10,10,0.95); backdrop-filter: blur(20px); border-bottom-color: var(--border); }
-.nav-logo { font-family: var(--serif); font-size: 20px; font-weight: 300; color: var(--white); letter-spacing: 0.08em; }
+.nav-logo { font-family: var(--serif); font-size: 20px; font-weight: 300; color: var(--white); letter-spacing: 0.08em; display: flex; align-items: center; gap: 10px; }
+.nav-logo-img { height: 32px; width: auto; display: block; filter: brightness(0) invert(1); opacity: 0.9; }
 .nav-logo span { color: var(--orange); }
 .nav-links { display: flex; align-items: center; gap: 40px; list-style: none; }
 .nav-links a { font-size: 11px; font-weight: 400; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); transition: color 0.25s; position: relative; }
@@ -74,7 +75,7 @@ nav.scrolled { padding: 16px 56px; background: rgba(10,10,10,0.95); backdrop-fil
 }
 .hero-bg {
   position: absolute; inset: 0;
-  background: url('https://picsum.photos/id/1005/1800/1000') center/cover no-repeat;
+  background: url('images/individual-hero.jpg') center 10%/cover no-repeat;
   transform: scale(1.08);
   transition: transform 9s cubic-bezier(0.25,0.46,0.45,0.94);
   will-change: transform;
@@ -402,7 +403,7 @@ nav.scrolled { padding: 16px 56px; background: rgba(10,10,10,0.95); backdrop-fil
   position: relative;
 }
 .cta-img img {
-  width: 100%; aspect-ratio: 4/5; object-fit: cover; display: block;
+  width: 100%; aspect-ratio: 4/5; object-fit: cover; object-position: center 10%; display: block;
   filter: brightness(0.75) contrast(1.1);
 }
 .cta-img-frame {
@@ -528,6 +529,15 @@ footer {
 .nav-mobile .nav-mobile-cta:hover { background: var(--orange-l, #f08c4a); }
 @media (max-width: 900px) {
   .nav-hamburger { display: flex; }
+  .hero-actions { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .hero-actions a { display: block; max-width: 300px; text-align: center; }
+  .hero-sub { font-size: 15px; max-width: 100%; }
+  .acc-inner { grid-template-columns: 1fr; gap: 24px; padding: 8px 0 32px 0; }
+  .therapy-card { padding: 32px 24px; }
+  .details-row { grid-template-columns: 1fr !important; }
+  .cta-btns { flex-direction: column; align-items: center; }
+  .cta-btns a { width: 100%; max-width: 300px; text-align: center; }
+  .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
 }
 </style>
 </head>
@@ -538,7 +548,7 @@ footer {
 
 <!-- NAV -->
 <nav id="nav">
-  <a href="/" class="nav-logo">Danny <span>Disha</span></a>
+  <a href="/" class="nav-logo"><img src="images/logo.png" alt="Danny Disha logo" class="nav-logo-img">Danny <span>Disha</span></a>
   <ul class="nav-links">
     <li><a href="/about">За мен</a></li>
     <li><a href="/individual-therapies" style="color:var(--white)">Индивидуални терапии</a></li>
@@ -803,7 +813,7 @@ footer {
   </div>
   <div class="cta-img reveal-r">
     <div class="cta-img-frame"></div>
-    <img src="https://picsum.photos/id/1072/900/1100" alt="Терапия">
+    <img src="images/individual-cta.jpg" alt="Терапия">
   </div>
 </section>
 
@@ -879,6 +889,7 @@ function toggleAcc(id) {
 }
 </script>
 
+<script>
 // Mobile nav toggle
 (function(){
   var btn = document.getElementById('navHamburger');
@@ -895,6 +906,7 @@ function toggleAcc(id) {
   overlay.addEventListener('click', function(){ toggle(false); });
   menu.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', function(){ toggle(false); }); });
 })();
+</script>
 
 </body>
 </html>
