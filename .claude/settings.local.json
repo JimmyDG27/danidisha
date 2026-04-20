@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node *)",
+      "Bash(npm install *)",
+      "Bash(echo \"EXIT: $?\")",
+      "Bash(echo \"has node_modules: $?\")",
+      "Bash(npm run *)",
+      "Bash(echo \"PID: $!\")",
+      "Read(//private/tmp/**)",
+      "Bash(node_modules/.bin/next dev *)",
+      "Bash(jobs)",
+      "Bash(mv \"individuals therapis.html\" \"individual-therapies.html\")",
+      "Bash(mv \"for companies.html\" \"for-companies.html\")",
+      "Bash(mv \"contacts.html\" \"contact.html\")",
+      "Bash(mv \"lecture training.html\" \"lecture-training.html\")",
+      "Bash(mv \"office wellnes.html\" \"office-wellness.html\")"
+    ]
+  }
+}

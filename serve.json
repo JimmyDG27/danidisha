@@ -1,0 +1,8 @@
+{
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/for-companies/office-wellness", "destination": "/office-wellness.html" },
+    { "source": "/for-companies/lectures-training", "destination": "/lectures-training.html" },
+    { "source": "/for-companies/corporate-retreats", "destination": "/corporate-retreats.html" }
+  ]
+}

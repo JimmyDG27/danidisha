@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Office Wellness — Danny Disha</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0a0a0a;--bg2:#0e0e0e;--surface:#141414;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);
+  --orange:#e8732a;--orange-l:#f08c4a;--orange-d:#c45e1a;
+  --white:#ffffff;--off:rgba(255,255,255,0.65);--muted:rgba(255,255,255,0.35);
+  --serif:'Cormorant Garamond',Georgia,serif;--sans:'DM Sans',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+a{color:inherit;text-decoration:none;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--sans);background:var(--bg);color:var(--white);overflow-x:hidden;cursor:none;}
+.cursor{position:fixed;pointer-events:none;z-index:9999;width:8px;height:8px;background:var(--orange);border-radius:50%;transform:translate(-50%,-50%);}
+.cursor-ring{position:fixed;pointer-events:none;z-index:9998;width:36px;height:36px;border:1px solid rgba(232,115,42,0.5);border-radius:50%;transform:translate(-50%,-50%);transition:width 0.3s,height 0.3s,border-color 0.3s;}
+body.hovering .cursor-ring{width:56px;height:56px;border-color:var(--orange);}
+nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:28px 56px;display:flex;align-items:center;justify-content:space-between;transition:padding 0.4s,background 0.4s,border-color 0.4s;border-bottom:1px solid transparent;}
+nav.scrolled{padding:16px 56px;background:rgba(10,10,10,0.95);backdrop-filter:blur(20px);border-bottom-color:var(--border);}
+.nav-logo{font-family:var(--serif);font-size:20px;font-weight:300;color:var(--white);letter-spacing:0.08em;}
+.nav-logo span{color:var(--orange);}
+.nav-links{display:flex;align-items:center;gap:40px;list-style:none;}
+.nav-links a{font-size:11px;font-weight:400;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);transition:color 0.25s;position:relative;}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;background:var(--orange);transform:scaleX(0);transform-origin:right;transition:transform 0.3s;}
+.nav-links a:hover{color:var(--white);}
+.nav-links a:hover::after{transform:scaleX(1);transform-origin:left;}
+.nav-active{color:var(--white)!important;}
+.nav-cta{font-size:11px!important;font-weight:500!important;letter-spacing:0.14em!important;color:var(--bg)!important;background:var(--orange);padding:11px 24px!important;border-radius:8px;}
+.nav-cta::after{display:none!important;}
+.nav-cta:hover{background:var(--orange-l)!important;}
+.reveal,.reveal-l,.reveal-r{opacity:0;transition:opacity 1.1s cubic-bezier(0.25,0.46,0.45,0.94),transform 1.1s cubic-bezier(0.25,0.46,0.45,0.94);}
+.reveal{transform:translateY(32px);}.reveal-l{transform:translateX(-32px);}.reveal-r{transform:translateX(32px);}
+.reveal.on,.reveal-l.on,.reveal-r.on{opacity:1;transform:none;}
+.btn-orange{display:inline-block;font-size:12px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--bg);background:var(--orange);padding:16px 36px;border-radius:8px;transition:background 0.25s,transform 0.25s;}
+.btn-orange:hover{background:var(--orange-l);transform:translateY(-2px);}
+.btn-ghost{display:inline-block;font-size:12px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--off);border:1px solid var(--border2);padding:16px 36px;border-radius:8px;transition:border-color 0.25s,color 0.25s,transform 0.25s;}
+.btn-ghost:hover{border-color:var(--orange);color:var(--orange);transform:translateY(-2px);}
+.section-eyebrow{font-size:10px;font-weight:500;letter-spacing:0.22em;text-transform:uppercase;color:var(--orange);display:flex;align-items:center;gap:12px;margin-bottom:20px;}
+.section-eyebrow::before{content:'';width:28px;height:1px;background:var(--orange);}
+@keyframes lineUp{to{opacity:1;transform:translateY(0);}}
+@keyframes fadeUp{to{opacity:1;transform:translateY(0);}}
+
+/* HERO */
+.hero{position:relative;height:100vh;min-height:680px;display:flex;align-items:flex-end;overflow:hidden;}
+.hero-bg{position:absolute;inset:0;background:url('https://picsum.photos/id/1080/1800/1000') center/cover no-repeat;transform:scale(1.08);transition:transform 9s cubic-bezier(0.25,0.46,0.45,0.94);will-change:transform;}
+.hero-bg.loaded{transform:scale(1.02);}
+.hero-vignette{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,10,1) 0%,rgba(10,10,10,0.72) 45%,rgba(10,10,10,0.15) 80%),linear-gradient(to right,rgba(10,10,10,0.65) 0%,transparent 60%);}
+.hero-content{position:relative;z-index:2;padding:0 56px 90px;max-width:860px;}
+.hero-breadcrumb{display:flex;align-items:center;gap:10px;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:28px;opacity:0;animation:fadeUp 0.8s 0.2s forwards;}
+.hero-breadcrumb span{color:var(--orange);}
+.hero-breadcrumb::before{content:'';width:32px;height:1px;background:var(--orange);display:inline-block;}
+.hero-h1{font-family:var(--serif);font-size:clamp(52px,8vw,110px);font-weight:300;line-height:0.93;letter-spacing:-0.02em;color:var(--white);margin-bottom:28px;}
+.hero-h1 .line{display:block;overflow:hidden;}
+.hero-h1 .line span{display:block;opacity:0;transform:translateY(100%);animation:lineUp 0.9s cubic-bezier(0.16,1,0.3,1) forwards;}
+.hero-h1 .line:nth-child(1) span{animation-delay:0.3s;}
+.hero-h1 .line:nth-child(2) span{animation-delay:0.48s;font-style:italic;color:var(--orange-l);}
+.hero-sub{font-size:16px;font-weight:300;color:var(--off);line-height:1.75;max-width:480px;margin-bottom:44px;opacity:0;animation:fadeUp 0.8s 0.9s forwards;transform:translateY(16px);}
+.hero-actions{opacity:0;animation:fadeUp 0.8s 1.05s forwards;transform:translateY(16px);display:flex;gap:14px;flex-wrap:wrap;}
+.hero-scroll-ind{position:absolute;bottom:40px;right:56px;z-index:2;display:flex;flex-direction:column;align-items:center;gap:10px;opacity:0;animation:fadeUp 1s 1.6s forwards;}
+.hero-scroll-ind span{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);writing-mode:vertical-rl;}
+.scroll-bar{width:1px;height:60px;background:linear-gradient(to bottom,var(--orange),transparent);animation:scrollBar 2s 2.2s infinite;}
+@keyframes scrollBar{0%{transform:scaleY(0);transform-origin:top;opacity:1;}50%{transform:scaleY(1);transform-origin:top;}51%{transform:scaleY(1);transform-origin:bottom;}100%{transform:scaleY(0);transform-origin:bottom;opacity:0;}}
+
+/* WHAT */
+.what{background:var(--bg2);padding:120px 56px;border-top:1px solid var(--border);display:grid;grid-template-columns:1fr 1.5fr;gap:100px;align-items:center;}
+.what-h2{font-family:var(--serif);font-size:clamp(32px,4vw,52px);font-weight:300;line-height:1.1;color:var(--white);margin-bottom:24px;}
+.what-h2 em{font-style:italic;color:var(--orange-l);}
+.what-body{font-size:15px;font-weight:300;color:var(--off);line-height:1.85;margin-bottom:20px;}
+
+/* FORMATS */
+.formats{background:var(--bg);padding:120px 56px;border-top:1px solid var(--border);}
+.formats-header{margin-bottom:64px;}
+.formats-h2{font-family:var(--serif);font-size:clamp(36px,4vw,56px);font-weight:300;line-height:1.1;color:var(--white);}
+.formats-h2 em{font-style:italic;color:var(--orange-l);}
+.formats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;}
+.format-card{background:var(--surface);border:1px solid var(--border);padding:40px 32px;position:relative;overflow:hidden;transition:border-color 0.4s;}
+.format-card:hover{border-color:rgba(232,115,42,0.25);}
+.format-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--orange);transform:scaleX(0);transform-origin:left;transition:transform 0.5s cubic-bezier(0.16,1,0.3,1);}
+.format-card:hover::before{transform:scaleX(1);}
+.format-icon{font-size:28px;margin-bottom:20px;opacity:0.7;}
+.format-title{font-family:var(--serif);font-size:26px;font-weight:300;color:var(--white);margin-bottom:8px;}
+.format-sub{font-size:12px;font-weight:300;font-style:italic;color:var(--orange-l);margin-bottom:16px;}
+.format-desc{font-size:14px;font-weight:300;color:var(--muted);line-height:1.75;}
+
+/* HOW */
+  .how {
+    background: var(--bg2);
+    padding: 120px 56px;
+    border-top: 1px solid var(--border);
+  }
+  .how-header {
+    max-width: 680px; margin-bottom: 72px;
+  }
+  .how-h2 {
+    font-family: var(--serif);
+    font-size: clamp(32px,4vw,52px); font-weight: 300; line-height: 1.1; color: var(--white); margin-bottom: 16px;
+  }
+  .how-h2 em { font-style: italic; color: var(--orange-l); }
+  .how-intro { font-size: 15px; font-weight: 300; color: var(--muted); line-height: 1.7; }
+  .how-timeline {
+    display: grid; grid-template-columns: repeat(4,1fr); gap: 0;
+    border-top: 1px solid var(--border);
+    padding-top: 48px;
+  }
+  .how-step { display: flex; flex-direction: column; gap: 0; padding-right: 32px; }
+  .how-step-visual { display: flex; align-items: center; gap: 0; margin-bottom: 24px; }
+  .how-step-num {
+    font-family: var(--serif); font-size: 48px; font-weight: 300;
+    color: var(--orange); line-height: 1; min-width: 56px;
+  }
+  .how-step-line {
+    flex: 1; height: 1px; background: var(--border2); margin-left: 8px;
+  }
+  .how-step-line.last { background: transparent; }
+  .how-step-title {
+    font-size: 15px; font-weight: 500; color: var(--white); margin-bottom: 10px; line-height: 1.3;
+  }
+  .how-step-desc { font-size: 13px; font-weight: 300; color: var(--muted); line-height: 1.65; }
+
+  /* FOR WHO */
+  /* FOR WHO */
+  .forwho {
+    background: var(--bg);
+    padding: 120px 56px;
+    border-top: 1px solid var(--border);
+  }
+  .forwho-header { max-width: 680px; margin-bottom: 64px; }
+  .forwho-h2 {
+    font-family: var(--serif);
+    font-size: clamp(32px,4vw,52px); font-weight: 300; line-height: 1.1; color: var(--white);
+  }
+  .forwho-h2 em { font-style: italic; color: var(--orange-l); }
+  .forwho-cards {
+    display: grid; grid-template-columns: repeat(2,1fr); gap: 2px;
+  }
+  .forwho-card {
+    background: var(--surface); border: 1px solid var(--border);
+    padding: 44px 40px; position: relative; overflow: hidden;
+    transition: border-color 0.4s, background 0.4s;
+  }
+  .forwho-card:hover { border-color: rgba(232,115,42,0.3); background: #181818; }
+  .forwho-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: var(--orange); transform: scaleX(0); transform-origin: left;
+    transition: transform 0.5s cubic-bezier(0.16,1,0.3,1);
+  }
+  .forwho-card:hover::before { transform: scaleX(1); }
+  .forwho-card-icon {
+    font-size: 32px; color: var(--orange); opacity: 0.5;
+    margin-bottom: 20px; display: block;
+    transition: opacity 0.3s;
+  }
+  .forwho-card:hover .forwho-card-icon { opacity: 1; }
+  .forwho-card-title {
+    font-family: var(--serif);
+    font-size: 26px; font-weight: 300; color: var(--white); margin-bottom: 14px; line-height: 1.1;
+  }
+  .forwho-card-desc {
+    font-size: 14px; font-weight: 300; color: var(--muted); line-height: 1.75;
+  }
+
+  /* CTA */
+  /* CTA */
+.cta-section{background:var(--bg2);padding:130px 56px;border-top:1px solid var(--border);text-align:center;position:relative;overflow:hidden;}
+.cta-deco{position:absolute;top:-40px;left:50%;transform:translateX(-50%);font-family:var(--serif);font-size:320px;font-weight:300;color:rgba(232,115,42,0.04);line-height:1;pointer-events:none;user-select:none;}
+.cta-inner{position:relative;z-index:1;max-width:660px;margin:0 auto;}
+.cta-eyebrow{font-size:10px;font-weight:500;letter-spacing:0.22em;text-transform:uppercase;color:var(--orange);display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:28px;}
+.cta-eyebrow::before,.cta-eyebrow::after{content:'';width:28px;height:1px;background:var(--orange);}
+.cta-h2{font-family:var(--serif);font-size:clamp(36px,5vw,62px);font-weight:300;line-height:1.05;color:var(--white);margin-bottom:20px;}
+.cta-h2 em{font-style:italic;color:var(--orange-l);}
+.cta-sub{font-size:15px;font-weight:300;color:var(--off);line-height:1.8;margin-bottom:44px;max-width:500px;margin-left:auto;margin-right:auto;}
+.cta-btns{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;}
+
+footer{background:var(--bg2);border-top:1px solid var(--border);padding:80px 56px 48px;}
+.footer-top{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:60px;margin-bottom:64px;padding-bottom:64px;border-bottom:1px solid var(--border);}
+.footer-logo{font-family:var(--serif);font-size:28px;font-weight:300;color:var(--white);margin-bottom:14px;}
+.footer-tagline{font-size:13px;font-weight:300;color:var(--muted);line-height:1.7;margin-bottom:28px;}
+.footer-col-label{font-size:9px;font-weight:500;letter-spacing:0.22em;text-transform:uppercase;color:var(--orange);margin-bottom:20px;}
+.footer-links{list-style:none;}
+.footer-links li{margin-bottom:12px;}
+.footer-links a{font-size:13px;font-weight:300;color:var(--muted);transition:color 0.2s;}
+.footer-links a:hover{color:var(--white);}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;}
+.footer-copy{font-size:11px;color:rgba(255,255,255,0.2);}
+
+@media(max-width:900px){
+  nav{padding:18px 24px;} nav.scrolled{padding:14px 24px;} .nav-links{display:none;}
+  .hero-content{padding:0 24px 70px;} .hero-scroll-ind{right:24px;}
+  .what{grid-template-columns:1fr;padding:80px 24px;gap:40px;}
+  .formats{padding:80px 24px;} .formats-grid{grid-template-columns:1fr;}
+  .how{grid-template-columns:1fr;padding:80px 24px;gap:32px;} .how-label{position:static;}
+  .forwho{grid-template-columns:1fr;padding:80px 24px;gap:40px;}
+  .cta-section{padding:80px 24px;}
+  footer{padding:60px 24px 40px;} .footer-top{grid-template-columns:1fr;gap:40px;}
+  .cursor,.cursor-ring{display:none;} body{cursor:auto;}
+}
+</style>
+</head>
+<body>
+<div class="cursor" id="cur"></div>
+<div class="cursor-ring" id="ring"></div>
+
+<nav id="nav">
+  <a href="/" class="nav-logo">Danny <span>Disha</span></a>
+  <ul class="nav-links">
+    <li><a href="/about">За мен</a></li>
+    <li><a href="/individual-therapies">Индивидуални терапии</a></li>
+    <li><a href="/for-companies" class="nav-active">За компании</a></li>
+    <li><a href="/contact" class="nav-cta">Запиши час</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg" id="heroBg"></div>
+  <div class="hero-vignette"></div>
+  <div class="hero-content">
+    <div class="hero-breadcrumb">За компании <span>/</span> Office Wellness</div>
+    <h1 class="hero-h1">
+      <span class="line"><span>Office</span></span>
+      <span class="line"><span>Wellness.</span></span>
+    </h1>
+    <p class="hero-sub">Масажи, дихателни практики и регулационни формати директно в офиса. За екипи, които искат по-ясен фокус и по-малко изтощение.</p>
+    <div class="hero-actions">
+      <a href="/contact" class="btn-orange">Изпрати запитване</a>
+      <a href="/for-companies" class="btn-ghost">Обратно към За компании</a>
+    </div>
+  </div>
+  <div class="hero-scroll-ind"><div class="scroll-bar"></div><span>Scroll</span></div>
+</section>
+
+<section class="what">
+  <div class="reveal-l">
+    <div class="section-eyebrow">Какво е</div>
+    <h2 class="what-h2">Регулация<br><em>на работното място.</em></h2>
+  </div>
+  <div class="reveal-r">
+    <p class="what-body">Office Wellness не е корпоративна привилегия — е стратегическа инвестиция. Когато нервната система на служителите е регулирана, фокусът е по-ясен, реакциите под стрес са по-адекватни, а изтощението се натрупва по-бавно.</p>
+    <p class="what-body">Идвам при вас. Без специална подготовка или оборудване от страна на компанията. Форматите се адаптират към размера на екипа и наличното пространство.</p>
+  </div>
+</section>
+
+<section class="formats">
+  <div class="formats-header reveal">
+    <div class="section-eyebrow">Формати</div>
+    <h2 class="formats-h2">Три начина да<br><em>работим в офиса</em></h2>
+  </div>
+  <div class="formats-grid">
+    <div class="format-card reveal">
+      <div class="format-icon">◎</div>
+      <div class="format-title">Масаж на стол</div>
+      <div class="format-sub">15–20 минути на служител</div>
+      <p class="format-desc">Структурен масаж на гърб, врат и рамена без събличане. Провежда се на специален масажен стол. Подходящ за офис среда с ограничено пространство.</p>
+    </div>
+    <div class="format-card reveal" style="transition-delay:0.12s">
+      <div class="format-icon">◈</div>
+      <div class="format-title">Дихателни практики</div>
+      <div class="format-sub">30–45 минути групов формат</div>
+      <p class="format-desc">Практически сесии за регулация на нервната система чрез дишане. Приложими техники, които служителите могат да използват самостоятелно след обучението.</p>
+    </div>
+    <div class="format-card reveal" style="transition-delay:0.22s">
+      <div class="format-icon">◇</div>
+      <div class="format-title">Регулационни паузи</div>
+      <div class="format-sub">10–15 минути, вградени в работния ден</div>
+      <p class="format-desc">Кратки структурирани паузи за движение и регулация, вградени в работния график. Особено ефективни при дълги периоди на когнитивно натоварване.</p>
+    </div>
+  </div>
+</section>
+
+<section class="how">
+  <div class="how-header reveal">
+    <div class="section-eyebrow">Как работим</div>
+    <h2 class="how-h2">Без излишна организация<br><em>от ваша страна.</em></h2>
+    <p class="how-intro">Идвам с всичко необходимо. Вие осигурявате само пространство и времето на служителите.</p>
+  </div>
+  <div class="how-timeline">
+    <div class="how-step reveal">
+      <div class="how-step-visual">
+        <div class="how-step-num">01</div>
+        <div class="how-step-line"></div>
+      </div>
+      <div class="how-step-content">
+        <div class="how-step-title">Кратък разговор — 15 минути</div>
+        <p class="how-step-desc">Обсъждаме размера на екипа, пространството и целта. Нищо повече.</p>
+      </div>
+    </div>
+    <div class="how-step reveal" style="transition-delay:0.1s">
+      <div class="how-step-visual">
+        <div class="how-step-num">02</div>
+        <div class="how-step-line"></div>
+      </div>
+      <div class="how-step-content">
+        <div class="how-step-title">Получавате конкретно предложение</div>
+        <p class="how-step-desc">Формат, времетраене, цена. Без излишна бюрокрация.</p>
+      </div>
+    </div>
+    <div class="how-step reveal" style="transition-delay:0.2s">
+      <div class="how-step-visual">
+        <div class="how-step-num">03</div>
+        <div class="how-step-line"></div>
+      </div>
+      <div class="how-step-content">
+        <div class="how-step-title">Идвам при вас</div>
+        <p class="how-step-desc">Нося оборудване и материали. От вас — само пространство и час от деня на екипа.</p>
+      </div>
+    </div>
+    <div class="how-step reveal" style="transition-delay:0.3s">
+      <div class="how-step-visual">
+        <div class="how-step-num">04</div>
+        <div class="how-step-line last"></div>
+      </div>
+      <div class="how-step-content">
+        <div class="how-step-title">Еднократно или регулярно</div>
+        <p class="how-step-desc">Решавате след първата среща. Без дългосрочни ангажименти предварително.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="forwho">
+  <div class="forwho-header reveal">
+    <div class="section-eyebrow">За кого е</div>
+    <h2 class="forwho-h2">Разпознай се<br><em>в описанието.</em></h2>
+  </div>
+  <div class="forwho-cards">
+    <div class="forwho-card reveal">
+      <div class="forwho-card-icon">◎</div>
+      <div class="forwho-card-title">Tech & Finance екипи</div>
+      <p class="forwho-card-desc">Висококогнитивно натоварване, дълги часове пред екран, постоянна мисловна активност. Точно тук телесната регулация има най-голям ефект.</p>
+    </div>
+    <div class="forwho-card reveal" style="transition-delay:0.1s">
+      <div class="forwho-card-icon">◈</div>
+      <div class="forwho-card-title">HR с wellbeing инициатива</div>
+      <p class="forwho-card-desc">Имате мандат и бюджет за благополучие на служителите. Нужен ви е партньор с конкретен и измерим формат — не стандартна програма.</p>
+    </div>
+    <div class="forwho-card reveal" style="transition-delay:0.2s">
+      <div class="forwho-card-icon">◇</div>
+      <div class="forwho-card-title">Организации с признаци на прегаряне</div>
+      <p class="forwho-card-desc">Висока текучест, чести отпуски, спад на продуктивност. Office Wellness не решава системните причини, но дава на екипа инструменти за справяне.</p>
+    </div>
+    <div class="forwho-card reveal" style="transition-delay:0.3s">
+      <div class="forwho-card-icon">◉</div>
+      <div class="forwho-card-title">Корпоративни събития и срещи</div>
+      <p class="forwho-card-desc">Стратегически офсайти, годишни събирания, конференции. Регулационна пауза в средата на деня значително подобрява фокуса след нея.</p>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="cta-deco">"</div>
+  <div class="cta-inner reveal">
+    <div class="cta-eyebrow">Идвам при вас</div>
+    <h2 class="cta-h2">Кажи ми кога<br>и <em>при кого.</em></h2>
+    <p class="cta-sub">Споделяш размера на екипа и наличното пространство — аз се оправям с останалото. Отговарям до 24 часа.</p>
+    <div class="cta-btns">
+      <a href="/contact" class="btn-orange">Изпрати запитване</a>
+      <a href="/for-companies" class="btn-ghost">Виж другите формати</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-logo">Danny Disha</div>
+      <p class="footer-tagline">Тяло. Психика. Регулация.<br>София, България</p>
+      <a href="/contact" class="btn-orange" style="font-size:11px;padding:12px 24px;margin-top:8px;display:inline-block">Запиши час</a>
+    </div>
+    <div>
+      <div class="footer-col-label">Услуги</div>
+      <ul class="footer-links">
+        <li><a href="/individual-therapies">Индивидуални терапии</a></li>
+        <li><a href="/for-companies/office-wellness">Office Wellness</a></li>
+        <li><a href="/for-companies/lectures-training">Лекции & Обучения</a></li>
+        <li><a href="/for-companies/corporate-retreats">Corporate Retreats</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-label">Навигация</div>
+      <ul class="footer-links">
+        <li><a href="/about">За мен</a></li>
+        <li><a href="/contact">Контакт</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2025 Даниел Липчев. Всички права запазени.</span>
+    <span class="footer-copy">dannydisha.com</span>
+  </div>
+</footer>
+
+<script>
+const cur=document.getElementById('cur'),ring=document.getElementById('ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+(function anim(){rx+=(mx-rx)*0.12;ry+=(my-ry)*0.12;cur.style.left=mx+'px';cur.style.top=my+'px';ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(anim);})();
+document.querySelectorAll('a,button').forEach(el=>{el.addEventListener('mouseenter',()=>document.body.classList.add('hovering'));el.addEventListener('mouseleave',()=>document.body.classList.remove('hovering'));});
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>50),{passive:true});
+const heroBg=document.getElementById('heroBg');
+setTimeout(()=>heroBg.classList.add('loaded'),80);
+window.addEventListener('scroll',()=>{heroBg.style.transform=`translateY(${scrollY*0.28}px) scale(1.02)`;},{passive:true});
+const io=new IntersectionObserver(entries=>{entries.forEach(e=>{if(!e.isIntersecting)return;setTimeout(()=>e.target.classList.add('on'),parseFloat(e.target.style.transitionDelay||0)*1000);io.unobserve(e.target);});},{threshold:0.06,rootMargin:'0px 0px -20px 0px'});
+document.querySelectorAll('.reveal,.reveal-l,.reveal-r').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>

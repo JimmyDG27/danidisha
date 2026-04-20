@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Лекции & Обучения — Danny Disha</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0a0a;--bg2:#0e0e0e;--surface:#141414;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);--orange:#e8732a;--orange-l:#f08c4a;--white:#ffffff;--off:rgba(255,255,255,0.65);--muted:rgba(255,255,255,0.35);--serif:'Cormorant Garamond',Georgia,serif;--sans:'DM Sans',sans-serif;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}a{color:inherit;text-decoration:none;}html{scroll-behavior:smooth;}
+body{font-family:var(--sans);background:var(--bg);color:var(--white);overflow-x:hidden;cursor:none;}
+.cursor{position:fixed;pointer-events:none;z-index:9999;width:8px;height:8px;background:var(--orange);border-radius:50%;transform:translate(-50%,-50%);}
+.cursor-ring{position:fixed;pointer-events:none;z-index:9998;width:36px;height:36px;border:1px solid rgba(232,115,42,0.5);border-radius:50%;transform:translate(-50%,-50%);transition:width 0.3s,height 0.3s,border-color 0.3s;}
+body.hovering .cursor-ring{width:56px;height:56px;border-color:var(--orange);}
+nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:28px 56px;display:flex;align-items:center;justify-content:space-between;transition:padding 0.4s,background 0.4s,border-color 0.4s;border-bottom:1px solid transparent;}
+nav.scrolled{padding:16px 56px;background:rgba(10,10,10,0.95);backdrop-filter:blur(20px);border-bottom-color:var(--border);}
+.nav-logo{font-family:var(--serif);font-size:20px;font-weight:300;color:var(--white);letter-spacing:0.08em;}.nav-logo span{color:var(--orange);}
+.nav-links{display:flex;align-items:center;gap:40px;list-style:none;}
+.nav-links a{font-size:11px;font-weight:400;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);transition:color 0.25s;position:relative;}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;background:var(--orange);transform:scaleX(0);transform-origin:right;transition:transform 0.3s;}
+.nav-links a:hover{color:var(--white);}.nav-links a:hover::after{transform:scaleX(1);transform-origin:left;}
+.nav-active{color:var(--white)!important;}.nav-cta{font-size:11px!important;font-weight:500!important;letter-spacing:0.14em!important;color:var(--bg)!important;background:var(--orange);padding:11px 24px!important;border-radius:8px;}.nav-cta::after{display:none!important;}.nav-cta:hover{background:var(--orange-l)!important;}
+.reveal,.reveal-l,.reveal-r{opacity:0;transition:opacity 1.1s cubic-bezier(0.25,0.46,0.45,0.94),transform 1.1s cubic-bezier(0.25,0.46,0.45,0.94);}
+.reveal{transform:translateY(32px);}.reveal-l{transform:translateX(-32px);}.reveal-r{transform:translateX(32px);}
+.reveal.on,.reveal-l.on,.reveal-r.on{opacity:1;transform:none;}
+.btn-orange{display:inline-block;font-size:12px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--bg);background:var(--orange);padding:16px 36px;border-radius:8px;transition:background 0.25s,transform 0.25s;}
+.btn-orange:hover{background:var(--orange-l);transform:translateY(-2px);}
+.btn-ghost{display:inline-block;font-size:12px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--off);border:1px solid var(--border2);padding:16px 36px;border-radius:8px;transition:border-color 0.25s,color 0.25s,transform 0.25s;}
+.btn-ghost:hover{border-color:var(--orange);color:var(--orange);transform:translateY(-2px);}
+.section-eyebrow{font-size:10px;font-weight:500;letter-spacing:0.22em;text-transform:uppercase;color:var(--orange);display:flex;align-items:center;gap:12px;margin-bottom:20px;}
+.section-eyebrow::before{content:'';width:28px;height:1px;background:var(--orange);}
+@keyframes lineUp{to{opacity:1;transform:translateY(0);}}@keyframes fadeUp{to{opacity:1;transform:translateY(0);}}
+
+.hero{position:relative;height:100vh;min-height:680px;display:flex;align-items:flex-end;overflow:hidden;}
+.hero-bg{position:absolute;inset:0;background:url('https://picsum.photos/id/1057/1800/1000') center/cover no-repeat;transform:scale(1.08);transition:transform 9s cubic-bezier(0.25,0.46,0.45,0.94);will-change:transform;}
+.hero-bg.loaded{transform:scale(1.02);}
+.hero-vignette{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,10,1) 0%,rgba(10,10,10,0.72) 45%,rgba(10,10,10,0.15) 80%),linear-gradient(to right,rgba(10,10,10,0.65) 0%,transparent 60%);}
+.hero-content{position:relative;z-index:2;padding:0 56px 90px;max-width:860px;}
+.hero-breadcrumb{display:flex;align-items:center;gap:10px;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:28px;opacity:0;animation:fadeUp 0.8s 0.2s forwards;}
+.hero-breadcrumb span{color:var(--orange);}
+.hero-breadcrumb::before{content:'';width:32px;height:1px;background:var(--orange);display:inline-block;}
+.hero-h1{font-family:var(--serif);font-size:clamp(52px,8vw,110px);font-weight:300;line-height:0.93;letter-spacing:-0.02em;color:var(--white);margin-bottom:28px;}
+.hero-h1 .line{display:block;overflow:hidden;}
+.hero-h1 .line span{display:block;opacity:0;transform:translateY(100%);animation:lineUp 0.9s cubic-bezier(0.16,1,0.3,1) forwards;}
+.hero-h1 .line:nth-child(1) span{animation-delay:0.3s;}
+.hero-h1 .line:nth-child(2) span{animation-delay:0.48s;font-style:italic;color:var(--orange-l);}
+.hero-sub{font-size:16px;font-weight:300;color:var(--off);line-height:1.75;max-width:480px;margin-bottom:44px;opacity:0;animation:fadeUp 0.8s 0.9s forwards;transform:translateY(16px);}
+.hero-actions{opacity:0;animation:fadeUp 0.8s 1.05s forwards;transform:translateY(16px);display:flex;gap:14px;flex-wrap:wrap;}
+.hero-scroll-ind{position:absolute;bottom:40px;right:56px;z-index:2;display:flex;flex-direction:column;align-items:center;gap:10px;opacity:0;animation:fadeUp 1s 1.6s forwards;}
+.hero-scroll-ind span{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);writing-mode:vertical-rl;}
+.scroll-bar{width:1px;height:60px;background:linear-gradient(to bottom,var(--orange),transparent);animation:scrollBar 2s 2.2s infinite;}
+@keyframes scrollBar{0%{transform:scaleY(0);transform-origin:top;opacity:1;}50%{transform:scaleY(1);transform-origin:top;}51%{transform:scaleY(1);transform-origin:bottom;}100%{transform:scaleY(0);transform-origin:bottom;opacity:0;}}
+
+.why{background:var(--bg2);padding:120px 56px;border-top:1px solid var(--border);display:grid;grid-template-columns:1fr 1.5fr;gap:100px;align-items:center;}
+.why-h2{font-family:var(--serif);font-size:clamp(30px,3.5vw,48px);font-weight:300;line-height:1.1;color:var(--white);margin-bottom:24px;}
+.why-h2 em{font-style:italic;color:var(--orange-l);}
+.why-body{font-size:15px;font-weight:300;color:var(--off);line-height:1.85;margin-bottom:18px;}
+
+.programs{background:var(--bg);padding:120px 56px;border-top:1px solid var(--border);}
+.programs-header{margin-bottom:72px;}
+.programs-h2{font-family:var(--serif);font-size:clamp(36px,4vw,56px);font-weight:300;line-height:1.1;color:var(--white);}
+.programs-h2 em{font-style:italic;color:var(--orange-l);}
+.programs-list{display:flex;flex-direction:column;gap:2px;}
+.program-row{background:var(--surface);border:1px solid var(--border);display:grid;grid-template-columns:200px 1fr auto;gap:40px;align-items:center;padding:40px 44px;transition:border-color 0.4s;position:relative;overflow:hidden;}
+.program-row::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--orange);transform:scaleY(0);transform-origin:top;transition:transform 0.5s cubic-bezier(0.16,1,0.3,1);}
+.program-row:hover{border-color:rgba(232,115,42,0.25);}
+.program-row:hover::before{transform:scaleY(1);}
+.program-name{font-family:var(--serif);font-size:24px;font-weight:300;color:var(--white);margin-bottom:4px;}
+.program-format{font-size:11px;font-weight:300;font-style:italic;color:var(--orange-l);}
+.program-desc{font-size:14px;font-weight:300;color:var(--muted);line-height:1.7;}
+.program-duration{font-family:var(--serif);font-size:20px;font-weight:300;color:var(--white);white-space:nowrap;text-align:right;}
+.program-duration-sub{font-size:11px;font-weight:300;color:var(--muted);text-align:right;margin-top:4px;}
+
+.themes{background:var(--bg2);padding:120px 56px;border-top:1px solid var(--border);}
+  .themes-header{max-width:680px;margin-bottom:64px;}
+  .themes-h2{font-family:var(--serif);font-size:clamp(36px,4vw,56px);font-weight:300;line-height:1.1;color:var(--white);margin-bottom:16px;}
+  .themes-h2 em{font-style:italic;color:var(--orange-l);}
+  .themes-intro{font-size:15px;font-weight:300;color:var(--muted);line-height:1.7;}
+  .themes-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:2px;}
+  .theme-card{
+    background:var(--surface);border:1px solid var(--border);
+    padding:36px 32px;position:relative;overflow:hidden;
+    transition:border-color 0.4s,background 0.4s;
+    display:flex;flex-direction:column;gap:0;
+  }
+  .theme-card:hover{border-color:rgba(232,115,42,0.3);background:#181818;}
+  .theme-card::before{
+    content:'';position:absolute;top:0;left:0;right:0;height:2px;
+    background:var(--orange);transform:scaleX(0);transform-origin:left;
+    transition:transform 0.5s cubic-bezier(0.16,1,0.3,1);
+  }
+  .theme-card:hover::before{transform:scaleX(1);}
+  .theme-card-num{
+    font-size:10px;font-weight:500;letter-spacing:0.18em;
+    color:var(--orange);margin-bottom:14px;
+  }
+  .theme-card-title{
+    font-family:var(--serif);
+    font-size:22px;font-weight:300;color:var(--white);
+    margin-bottom:12px;line-height:1.2;
+  }
+  .theme-card-desc{
+    font-size:13px;font-weight:300;color:var(--muted);
+    line-height:1.7;margin-bottom:20px;flex:1;
+  }
+  .theme-card-signal{
+    font-size:12px;font-weight:300;
+    color:var(--orange);
+    border-top:1px solid var(--border);
+    padding-top:14px;line-height:1.5;
+    font-style:italic;
+    opacity:0.8;
+  }
+.theme-dot{width:5px;height:5px;border-radius:50%;background:var(--orange);opacity:0.6;margin-bottom:10px;}
+.theme-name{font-size:14px;font-weight:300;color:var(--off);}
+
+.cta-section{background:var(--bg);padding:130px 56px;border-top:1px solid var(--border);text-align:center;position:relative;overflow:hidden;}
+.cta-deco{position:absolute;top:-40px;left:50%;transform:translateX(-50%);font-family:var(--serif);font-size:320px;font-weight:300;color:rgba(232,115,42,0.04);line-height:1;pointer-events:none;user-select:none;}
+.cta-inner{position:relative;z-index:1;max-width:660px;margin:0 auto;}
+.cta-eyebrow{font-size:10px;font-weight:500;letter-spacing:0.22em;text-transform:uppercase;color:var(--orange);display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:28px;}
+.cta-eyebrow::before,.cta-eyebrow::after{content:'';width:28px;height:1px;background:var(--orange);}
+.cta-h2{font-family:var(--serif);font-size:clamp(36px,5vw,62px);font-weight:300;line-height:1.05;color:var(--white);margin-bottom:20px;}
+.cta-h2 em{font-style:italic;color:var(--orange-l);}
+.cta-sub{font-size:15px;font-weight:300;color:var(--off);line-height:1.8;margin-bottom:44px;max-width:500px;margin-left:auto;margin-right:auto;}
+.cta-btns{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;}
+
+footer{background:var(--bg2);border-top:1px solid var(--border);padding:80px 56px 48px;}
+.footer-top{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:60px;margin-bottom:64px;padding-bottom:64px;border-bottom:1px solid var(--border);}
+.footer-logo{font-family:var(--serif);font-size:28px;font-weight:300;color:var(--white);margin-bottom:14px;}
+.footer-tagline{font-size:13px;font-weight:300;color:var(--muted);line-height:1.7;margin-bottom:28px;}
+.footer-col-label{font-size:9px;font-weight:500;letter-spacing:0.22em;text-transform:uppercase;color:var(--orange);margin-bottom:20px;}
+.footer-links{list-style:none;}.footer-links li{margin-bottom:12px;}
+.footer-links a{font-size:13px;font-weight:300;color:var(--muted);transition:color 0.2s;}.footer-links a:hover{color:var(--white);}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;}
+.footer-copy{font-size:11px;color:rgba(255,255,255,0.2);}
+
+@media(max-width:900px){
+  nav{padding:18px 24px;}nav.scrolled{padding:14px 24px;}.nav-links{display:none;}
+  .hero-content{padding:0 24px 70px;}.hero-scroll-ind{right:24px;}
+  .why{grid-template-columns:1fr;padding:80px 24px;gap:40px;}
+  .programs{padding:80px 24px;}.program-row{grid-template-columns:1fr;gap:16px;padding:28px 24px;}
+  .program-duration{text-align:left;}
+  .themes{grid-template-columns:1fr;padding:80px 24px;gap:40px;}.themes-grid{grid-template-columns:1fr;}
+  .cta-section{padding:80px 24px;}
+  footer{padding:60px 24px 40px;}.footer-top{grid-template-columns:1fr;gap:40px;}
+  .cursor,.cursor-ring{display:none;}body{cursor:auto;}
+}
+</style>
+</head>
+<body>
+<div class="cursor" id="cur"></div>
+<div class="cursor-ring" id="ring"></div>
+<nav id="nav">
+  <a href="/" class="nav-logo">Danny <span>Disha</span></a>
+  <ul class="nav-links">
+    <li><a href="/about">За мен</a></li>
+    <li><a href="/individual-therapies">Индивидуални терапии</a></li>
+    <li><a href="/for-companies" class="nav-active">За компании</a></li>
+    <li><a href="/contact" class="nav-cta">Запиши час</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg" id="heroBg"></div>
+  <div class="hero-vignette"></div>
+  <div class="hero-content">
+    <div class="hero-breadcrumb">За компании <span>/</span> Лекции & Обучения</div>
+    <h1 class="hero-h1">
+      <span class="line"><span>Лекции &</span></span>
+      <span class="line"><span>Обучения.</span></span>
+    </h1>
+    <p class="hero-sub">Практични модели за нервна регулация, управление на енергията и устойчиво представяне. Три формата според нуждата на организацията.</p>
+    <div class="hero-actions">
+      <a href="/contact" class="btn-orange">Изпрати запитване</a>
+      <a href="/for-companies" class="btn-ghost">Обратно към За компании</a>
+    </div>
+  </div>
+  <div class="hero-scroll-ind"><div class="scroll-bar"></div><span>Scroll</span></div>
+</section>
+
+<section class="why">
+  <div class="reveal-l">
+    <div class="section-eyebrow">Защо</div>
+    <h2 class="why-h2">Знанието за нервната система е <em>стратегически ресурс.</em></h2>
+  </div>
+  <div class="reveal-r">
+    <p class="why-body">Много организации инвестират в мотивация. По-малко инвестират в регулация. Разликата е съществена — мотивираният, но нерегулиран служител изгаря по-бързо.</p>
+    <p class="why-body">Тези обучения не са вдъхновяващи речи. Те са практични модели, приложими в реалната работна среда — на следващия ден след обучението.</p>
+  </div>
+</section>
+
+<section class="programs">
+  <div class="programs-header reveal">
+    <div class="section-eyebrow">Три формата</div>
+    <h2 class="programs-h2">Избери според<br><em>нуждата на екипа.</em></h2>
+  </div>
+  <div class="programs-list">
+    <div class="program-row reveal">
+      <div>
+        <div class="program-name">Wellbeing Fundamentals</div>
+        <div class="program-format">Въвеждаща лекция</div>
+      </div>
+      <div class="program-desc">Ясна рамка за това как функционира човешката система под натиск. Как работи автономната нервна система, какво се случва при хроничен стрес и как се управлява енергията. Подходящо за HR инициативи, конференции и мениджърски екипи.</div>
+      <div>
+        <div class="program-duration">60–90 мин.</div>
+        <div class="program-duration-sub">презентационен формат</div>
+      </div>
+    </div>
+    <div class="program-row reveal" style="transition-delay:0.12s">
+      <div>
+        <div class="program-name">Applied Wellbeing</div>
+        <div class="program-format">Интерактивен workshop</div>
+      </div>
+      <div class="program-desc">Практическо продължение на Fundamentals. Участниците изследват собствените си регулационни модели, практикуват дихателни техники и учат как да прилагат микро-паузи в работния ден. Фокусът е върху реално приложение.</div>
+      <div>
+        <div class="program-duration">2–3 часа</div>
+        <div class="program-duration-sub">малки и средни групи</div>
+      </div>
+    </div>
+    <div class="program-row reveal" style="transition-delay:0.22s">
+      <div>
+        <div class="program-name">Development Program</div>
+        <div class="program-format">Дългосрочна програма</div>
+      </div>
+      <div class="program-desc">Последователна обучителна структура за изграждане на култура на регулация в организацията. Комбинира лекционни модули, практически workshops и регулационни формати. Целта е устойчив модел, не еднократна инициатива.</div>
+      <div>
+        <div class="program-duration">3–12 мес.</div>
+        <div class="program-duration-sub">присъствени и онлайн</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="themes">
+  <div class="themes-header reveal">
+    <div class="section-eyebrow">Теми</div>
+    <h2 class="themes-h2">Разпознай се<br>в <em>описанието.</em></h2>
+    <p class="themes-intro">Всяка тема е самостоятелен модул. Могат да се комбинират или да се разработят в дълбочина.</p>
+  </div>
+  <div class="themes-grid">
+
+    <div class="theme-card reveal">
+      <div class="theme-card-num">01</div>
+      <div class="theme-card-title">Нервна система и работна среда</div>
+      <p class="theme-card-desc">Как хроничният стрес променя поведението, решенията и отношенията в екипа. Защо "просто да се събере" не работи.</p>
+      <div class="theme-card-signal">Разпознаваш го когато: екипът е реактивен, раздразнителен или апатичен под натиск.</div>
+    </div>
+
+    <div class="theme-card reveal" style="transition-delay:0.08s">
+      <div class="theme-card-num">02</div>
+      <div class="theme-card-title">Управление на енергията</div>
+      <p class="theme-card-desc">Енергията не е мотивация. Тя е физиологичен ресурс — управляем, ако знаеш как. Практични модели за зареждане и разход.</p>
+      <div class="theme-card-signal">Разпознаваш го когато: хората са мотивирани, но изтощени.</div>
+    </div>
+
+    <div class="theme-card reveal" style="transition-delay:0.16s">
+      <div class="theme-card-num">03</div>
+      <div class="theme-card-title">Превенция на прегаряне</div>
+      <p class="theme-card-desc">Как се разпознава прегарянето преди да е станало проблем. Ранни сигнали, индивидуални и екипни рискови фактори.</p>
+      <div class="theme-card-signal">Разпознаваш го когато: имате текучест или чести отпуски по болест.</div>
+    </div>
+
+    <div class="theme-card reveal" style="transition-delay:0.24s">
+      <div class="theme-card-num">04</div>
+      <div class="theme-card-title">Фокус и когнитивна яснота</div>
+      <p class="theme-card-desc">Защо мозъкът губи фокус и как да го върне. Инструменти за дълбока работа в среда с постоянни прекъсвания.</p>
+      <div class="theme-card-signal">Разпознаваш го когато: продуктивността е ниска въпреки дългите часове.</div>
+    </div>
+
+    <div class="theme-card reveal" style="transition-delay:0.32s">
+      <div class="theme-card-num">05</div>
+      <div class="theme-card-title">Дишане и регулация</div>
+      <p class="theme-card-desc">Дишането е единственият автономен процес, който можем съзнателно да контролираме. Практични техники за бърза регулация.</p>
+      <div class="theme-card-signal">Разпознаваш го когато: екипът е под постоянно когнитивно напрежение.</div>
+    </div>
+
+    <div class="theme-card reveal" style="transition-delay:0.4s">
+      <div class="theme-card-num">06</div>
+      <div class="theme-card-title">Лидерски капацитет под натиск</div>
+      <p class="theme-card-desc">Как стресът на лидера се предава на екипа. Регулация като лидерска компетентност — не като слабост.</p>
+      <div class="theme-card-signal">Разпознаваш го когато: лидерите поемат твърде много и го усещат екипите.</div>
+    </div>
+
+    <div class="theme-card reveal" style="transition-delay:0.48s">
+      <div class="theme-card-num">07</div>
+      <div class="theme-card-title">Баланс натоварване / възстановяване</div>
+      <p class="theme-card-desc">Не почивката е проблемът — а начинът на работа. Как да се структурира работният ден за устойчиво представяне.</p>
+      <div class="theme-card-signal">Разпознаваш го когато: хората работят много, но резултатите не растат.</div>
+    </div>
+
+    <div class="theme-card reveal" style="transition-delay:0.56s">
+      <div class="theme-card-num">08</div>
+      <div class="theme-card-title">Микро-практики в ежедневието</div>
+      <p class="theme-card-desc">Малки, конкретни действия вградени в работния ден. Прилагаеми от следващия ден — без да се налага да се промени всичко.</p>
+      <div class="theme-card-signal">Разпознаваш го когато: имате нужда от нещо практично и незабавно.</div>
+    </div>
+
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="cta-deco">"</div>
+  <div class="cta-inner reveal">
+    <div class="cta-eyebrow">Работим заедно?</div>
+    <h2 class="cta-h2">Яснотата започва<br>със <em>знание.</em></h2>
+    <p class="cta-sub">Разкажи ми за екипа и ситуацията. Заедно избираме формата. Отговарям до 24 часа.</p>
+    <div class="cta-btns">
+      <a href="/contact" class="btn-orange">Изпрати запитване</a>
+      <a href="/for-companies" class="btn-ghost">Виж другите формати</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-logo">Danny Disha</div>
+      <p class="footer-tagline">Тяло. Психика. Регулация.<br>София, България</p>
+      <a href="/contact" class="btn-orange" style="font-size:11px;padding:12px 24px;margin-top:8px;display:inline-block">Запиши час</a>
+    </div>
+    <div>
+      <div class="footer-col-label">Услуги</div>
+      <ul class="footer-links">
+        <li><a href="/individual-therapies">Индивидуални терапии</a></li>
+        <li><a href="/for-companies/office-wellness">Office Wellness</a></li>
+        <li><a href="/for-companies/lectures-training">Лекции & Обучения</a></li>
+        <li><a href="/for-companies/corporate-retreats">Corporate Retreats</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-label">Навигация</div>
+      <ul class="footer-links">
+        <li><a href="/about">За мен</a></li>
+        <li><a href="/contact">Контакт</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2025 Даниел Липчев. Всички права запазени.</span>
+    <span class="footer-copy">dannydisha.com</span>
+  </div>
+</footer>
+
+<script>
+const cur=document.getElementById('cur'),ring=document.getElementById('ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+(function anim(){rx+=(mx-rx)*0.12;ry+=(my-ry)*0.12;cur.style.left=mx+'px';cur.style.top=my+'px';ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(anim);})();
+document.querySelectorAll('a,button').forEach(el=>{el.addEventListener('mouseenter',()=>document.body.classList.add('hovering'));el.addEventListener('mouseleave',()=>document.body.classList.remove('hovering'));});
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>50),{passive:true});
+const heroBg=document.getElementById('heroBg');
+setTimeout(()=>heroBg.classList.add('loaded'),80);
+window.addEventListener('scroll',()=>{heroBg.style.transform=`translateY(${scrollY*0.28}px) scale(1.02)`;},{passive:true});
+const io=new IntersectionObserver(entries=>{entries.forEach(e=>{if(!e.isIntersecting)return;setTimeout(()=>e.target.classList.add('on'),parseFloat(e.target.style.transitionDelay||0)*1000);io.unobserve(e.target);});},{threshold:0.06,rootMargin:'0px 0px -20px 0px'});
+document.querySelectorAll('.reveal,.reveal-l,.reveal-r').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>

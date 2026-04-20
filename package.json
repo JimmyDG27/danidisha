@@ -1,0 +1,8 @@
+{
+  "name": "dannydisha",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "npx serve . --config serve.json",
+    "start": "npx serve . --config serve.json"
+  }
+}

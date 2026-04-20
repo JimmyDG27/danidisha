@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Индивидуални терапии — Danny Disha</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:      #0a0a0a;
+  --bg2:     #0e0e0e;
+  --surface: #141414;
+  --border:  rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.13);
+  --orange:  #e8732a;
+  --orange-l:#f08c4a;
+  --orange-d:#c45e1a;
+  --white:   #ffffff;
+  --off:     rgba(255,255,255,0.65);
+  --muted:   rgba(255,255,255,0.35);
+  --serif:   'Cormorant Garamond', Georgia, serif;
+  --sans:    'DM Sans', sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+a { color: inherit; text-decoration: none; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--white);
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* CURSOR */
+.cursor { position: fixed; pointer-events: none; z-index: 9999; width: 8px; height: 8px; background: var(--orange); border-radius: 50%; transform: translate(-50%,-50%); transition: transform 0.1s; }
+.cursor-ring { position: fixed; pointer-events: none; z-index: 9998; width: 36px; height: 36px; border: 1px solid rgba(232,115,42,0.5); border-radius: 50%; transform: translate(-50%,-50%); transition: width 0.3s, height 0.3s, border-color 0.3s; }
+body.hovering .cursor-ring { width: 56px; height: 56px; border-color: var(--orange); }
+
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 500;
+  padding: 28px 56px;
+  display: flex; align-items: center; justify-content: space-between;
+  transition: padding 0.4s, background 0.4s, border-color 0.4s;
+  border-bottom: 1px solid transparent;
+}
+nav.scrolled { padding: 16px 56px; background: rgba(10,10,10,0.95); backdrop-filter: blur(20px); border-bottom-color: var(--border); }
+.nav-logo { font-family: var(--serif); font-size: 20px; font-weight: 300; color: var(--white); letter-spacing: 0.08em; }
+.nav-logo span { color: var(--orange); }
+.nav-links { display: flex; align-items: center; gap: 40px; list-style: none; }
+.nav-links a { font-size: 11px; font-weight: 400; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); transition: color 0.25s; position: relative; }
+.nav-links a::after { content: ''; position: absolute; bottom: -4px; left: 0; right: 0; height: 1px; background: var(--orange); transform: scaleX(0); transform-origin: right; transition: transform 0.3s; }
+.nav-links a:hover { color: var(--white); }
+.nav-links a:hover::after { transform: scaleX(1); transform-origin: left; }
+.nav-cta { font-size: 11px !important; font-weight: 500 !important; letter-spacing: 0.14em !important; color: var(--bg) !important; background: var(--orange); padding: 11px 24px !important; border-radius: 8px; }
+.nav-cta::after { display: none !important; }
+.nav-cta:hover { background: var(--orange-l) !important; color: var(--bg) !important; }
+
+/* REVEAL */
+.reveal, .reveal-l, .reveal-r { opacity: 0; transition: opacity 0.9s ease, transform 0.9s ease; }
+.reveal   { transform: translateY(50px); }
+.reveal-l { transform: translateX(-50px); }
+.reveal-r { transform: translateX(50px); }
+.reveal.on, .reveal-l.on, .reveal-r.on { opacity: 1; transform: none; }
+
+/* HERO */
+.hero {
+  position: relative; height: 90vh; min-height: 650px;
+  display: flex; align-items: flex-end;
+  overflow: hidden;
+}
+.hero-bg {
+  position: absolute; inset: 0;
+  background: url('https://picsum.photos/id/1005/1800/1000') center/cover no-repeat;
+  transform: scale(1.08);
+  transition: transform 9s cubic-bezier(0.25,0.46,0.45,0.94);
+  will-change: transform;
+}
+.hero-bg.loaded { transform: scale(1.02); }
+.hero-vignette {
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(to top,  rgba(10,10,10,1) 0%, rgba(10,10,10,0.75) 40%, rgba(10,10,10,0.15) 75%),
+    linear-gradient(to right, rgba(10,10,10,0.7) 0%, transparent 65%);
+}
+.hero-content {
+  position: relative; z-index: 2;
+  padding: 0 56px 90px; max-width: 820px;
+}
+.hero-breadcrumb {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 10px; font-weight: 400; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--muted);
+  margin-bottom: 24px;
+  opacity: 0; animation: fadeUp 0.8s 0.2s forwards;
+}
+.hero-breadcrumb span { color: var(--orange); }
+.hero-breadcrumb::before { content: ''; width: 32px; height: 1px; background: var(--orange); }
+
+.hero-h1 {
+  font-family: var(--serif);
+  font-size: clamp(52px, 8vw, 108px);
+  font-weight: 300; line-height: 0.94;
+  letter-spacing: -0.02em; color: var(--white);
+  margin-bottom: 28px;
+}
+.hero-h1 .line { display: block; overflow: hidden; }
+.hero-h1 .line span {
+  display: block;
+  opacity: 0; transform: translateY(100%);
+  animation: lineUp 0.9s cubic-bezier(0.16,1,0.3,1) forwards;
+}
+.hero-h1 .line:nth-child(1) span { animation-delay: 0.3s; }
+.hero-h1 .line:nth-child(2) span { animation-delay: 0.45s; font-style: italic; color: var(--orange-l); }
+
+@keyframes lineUp { to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+
+.hero-sub {
+  font-size: 16px; font-weight: 300; color: var(--off);
+  line-height: 1.75; max-width: 480px; margin-bottom: 44px;
+  opacity: 0; animation: fadeUp 0.8s 0.8s forwards; transform: translateY(16px);
+}
+.hero-cta {
+  opacity: 0; animation: fadeUp 0.8s 1s forwards; transform: translateY(16px);
+}
+
+/* BUTTONS */
+.btn-orange {
+  display: inline-block; font-size: 12px; font-weight: 500;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--bg); background: var(--orange);
+  padding: 16px 36px; border-radius: 8px;
+  transition: background 0.25s, transform 0.25s;
+}
+.btn-orange:hover { background: var(--orange-l); transform: translateY(-2px); }
+.btn-ghost {
+  display: inline-block; font-size: 12px; font-weight: 400;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--off); border: 1px solid var(--border2);
+  padding: 16px 36px; border-radius: 8px;
+  transition: border-color 0.25s, color 0.25s, transform 0.25s;
+}
+.btn-ghost:hover { border-color: var(--orange); color: var(--orange); transform: translateY(-2px); }
+
+/* APPROACH */
+  .approach {
+    background: var(--bg2);
+    padding: 100px 56px;
+    border-top: 1px solid var(--border);
+  }
+  .approach-inner {
+    display: grid; grid-template-columns: 1fr 1.4fr; gap: 80px; align-items: start;
+  }
+  .approach-h2 {
+    font-family: var(--serif);
+    font-size: clamp(30px, 3.5vw, 48px);
+    font-weight: 300; line-height: 1.15; color: var(--white);
+    margin-top: 20px;
+  }
+  .approach-h2 em { font-style: italic; color: var(--orange-l); }
+  .approach-body {
+    font-size: 15px; font-weight: 300; color: var(--off);
+    line-height: 1.85; margin-bottom: 20px;
+  }
+  .approach-body:last-child { margin-bottom: 0; }
+
+  /* THERAPIES */
+.therapies {
+  background: var(--bg);
+  padding: 120px 56px;
+  border-top: 1px solid var(--border);
+}
+.therapies-header {
+  margin-bottom: 72px;
+}
+.section-eyebrow {
+  font-size: 10px; font-weight: 500; letter-spacing: 0.22em;
+  text-transform: uppercase; color: var(--orange);
+  display: flex; align-items: center; gap: 12px; margin-bottom: 20px;
+}
+.section-eyebrow::before { content: ''; width: 28px; height: 1px; background: var(--orange); }
+.therapies-h2 {
+  font-family: var(--serif);
+  font-size: clamp(36px, 4.5vw, 60px);
+  font-weight: 300; line-height: 1.1; color: var(--white);
+}
+.therapies-h2 em { font-style: italic; color: var(--orange-l); }
+
+.therapy-cards {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px;
+  margin-bottom: 2px;
+}
+.therapy-card {
+  background: var(--surface);
+  padding: 44px 36px;
+  position: relative; overflow: hidden;
+  border: 1px solid var(--border);
+  transition: border-color 0.4s, background 0.4s;
+  display: flex; flex-direction: column;
+}
+.therapy-card:hover {
+  border-color: rgba(232,115,42,0.3);
+  background: #181818;
+}
+.therapy-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: var(--orange);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 0.5s cubic-bezier(0.16,1,0.3,1);
+}
+.therapy-card:hover::before { transform: scaleX(1); }
+
+.card-level {
+  font-size: 9px; font-weight: 500; letter-spacing: 0.22em;
+  text-transform: uppercase; color: var(--orange);
+  margin-bottom: 20px;
+  display: flex; align-items: center; gap: 8px;
+}
+.card-level::before {
+  content: ''; width: 20px; height: 1px; background: var(--orange); opacity: 0.5;
+}
+.card-name {
+  font-family: var(--serif);
+  font-size: clamp(26px, 2.5vw, 36px);
+  font-weight: 300; color: var(--white);
+  margin-bottom: 8px; line-height: 1.1;
+}
+.card-subtitle {
+  font-size: 12px; font-weight: 300; font-style: italic;
+  color: var(--orange-l); margin-bottom: 20px;
+  letter-spacing: 0.02em;
+}
+.card-divider {
+  width: 32px; height: 1px; background: var(--border2);
+  margin-bottom: 20px;
+}
+.card-desc {
+  font-size: 14px; font-weight: 300; color: var(--muted);
+  line-height: 1.75; flex: 1; margin-bottom: 32px;
+}
+.card-price-wrap {
+  border-top: 1px solid var(--border);
+  padding-top: 20px;
+  display: flex; justify-content: space-between; align-items: flex-end;
+}
+.card-price {
+  font-family: var(--serif);
+  font-size: 28px; font-weight: 300; color: var(--white);
+}
+.card-price-note {
+  font-size: 11px; font-weight: 300; color: var(--muted);
+  line-height: 1.4; text-align: right;
+}
+
+/* GUIDE */
+  .guide {
+    background: var(--bg);
+    padding: 120px 56px;
+    border-top: 1px solid var(--border);
+  }
+  .guide-header { max-width: 680px; margin-bottom: 56px; }
+  .guide-h2 {
+    font-family: var(--serif);
+    font-size: clamp(36px, 4vw, 56px);
+    font-weight: 300; line-height: 1.1; color: var(--white); margin-bottom: 14px;
+  }
+  .guide-h2 em { font-style: italic; color: var(--orange-l); }
+  .guide-intro { font-size: 15px; font-weight: 300; color: var(--muted); line-height: 1.7; }
+
+  .accordion { border-top: 1px solid var(--border); margin-bottom: 32px; }
+
+  .acc-item { border-bottom: 1px solid var(--border); }
+
+  .acc-trigger {
+    width: 100%; background: none; border: none; cursor: none;
+    padding: 28px 0;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 24px;
+    transition: background 0.3s;
+  }
+  .acc-trigger:hover { background: rgba(255,255,255,0.02); }
+  .acc-trigger-left {
+    display: flex; align-items: center; gap: 28px; text-align: left;
+  }
+  .acc-num {
+    font-size: 11px; font-weight: 500; letter-spacing: 0.14em;
+    color: var(--orange); min-width: 28px;
+  }
+  .acc-name {
+    font-family: var(--serif);
+    font-size: clamp(20px, 2.5vw, 30px); font-weight: 300; color: var(--white);
+    margin-bottom: 4px; line-height: 1.1;
+  }
+  .acc-sub {
+    font-size: 12px; font-weight: 300; color: var(--muted); letter-spacing: 0.02em;
+  }
+  .acc-icon {
+    font-size: 24px; font-weight: 300; color: var(--orange);
+    min-width: 32px; text-align: center;
+    transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+  }
+  .acc-icon.open { transform: rotate(45deg); }
+
+  .acc-body {
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.6s cubic-bezier(0.16,1,0.3,1);
+  }
+  .acc-body.open { max-height: 600px; }
+
+  .acc-inner {
+    display: grid; grid-template-columns: repeat(3,1fr); gap: 40px;
+    padding: 8px 0 40px 56px;
+  }
+  .acc-col { }
+  .acc-block-title {
+    font-size: 9px; font-weight: 500; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--orange); margin-bottom: 12px;
+  }
+  .acc-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .acc-list li {
+    font-size: 13px; font-weight: 300; color: var(--off);
+    line-height: 1.55; padding-left: 14px; position: relative;
+  }
+  .acc-list li::before { content: '–'; position: absolute; left: 0; color: var(--orange); opacity: 0.5; }
+  .acc-text { font-size: 13px; font-weight: 300; color: var(--muted); line-height: 1.75; }
+  .acc-price {
+    font-family: var(--serif);
+    font-size: 28px; font-weight: 300; color: var(--white);
+    margin: 20px 0 4px;
+  }
+  .acc-price span { font-size: 13px; color: var(--muted); margin-left: 4px; }
+  .acc-price-alt { font-size: 13px; font-weight: 300; color: var(--muted); margin-bottom: 20px; }
+  .acc-cta {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 11px; font-weight: 500; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--orange);
+    margin-top: 16px; transition: gap 0.3s;
+  }
+  .acc-cta:hover { gap: 16px; }
+
+  .guide-unsure {
+    display: flex; align-items: center; justify-content: center;
+    gap: 24px; flex-wrap: wrap; padding: 28px 32px;
+    border: 1px solid var(--border); background: var(--surface);
+  }
+  .guide-unsure-text { font-size: 14px; font-weight: 300; color: var(--muted); }
+
+  /* DETAILS */
+.details {
+  background: var(--bg);
+  padding: 100px 56px;
+  border-top: 1px solid var(--border);
+  display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start;
+}
+.details-h2 {
+  font-family: var(--serif);
+  font-size: clamp(32px, 3.5vw, 48px);
+  font-weight: 300; line-height: 1.15; color: var(--white);
+}
+.details-h2 em { font-style: italic; color: var(--orange-l); }
+.details-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 2px;
+}
+.detail-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 24px 20px;
+}
+.detail-label {
+  font-size: 9px; font-weight: 500; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--orange);
+  margin-bottom: 8px;
+}
+.detail-val {
+  font-size: 14px; font-weight: 300; color: var(--off); line-height: 1.5;
+}
+
+/* CTA */
+.cta-section {
+  background: var(--bg2);
+  padding: 130px 56px;
+  border-top: 1px solid var(--border);
+  display: grid; grid-template-columns: 1fr 1fr; gap: 100px; align-items: center;
+}
+.cta-h2 {
+  font-family: var(--serif);
+  font-size: clamp(38px, 5vw, 68px);
+  font-weight: 300; line-height: 1.05; color: var(--white);
+  margin-bottom: 24px;
+}
+.cta-h2 em { font-style: italic; color: var(--orange-l); }
+.cta-sub {
+  font-size: 15px; font-weight: 300; color: var(--off); line-height: 1.8; margin-bottom: 44px;
+}
+.cta-btns { display: flex; gap: 14px; flex-wrap: wrap; }
+.cta-img {
+  position: relative;
+}
+.cta-img img {
+  width: 100%; aspect-ratio: 4/5; object-fit: cover; display: block;
+  filter: brightness(0.75) contrast(1.1);
+}
+.cta-img-frame {
+  position: absolute; bottom: -20px; right: -20px; top: 20px; left: 20px;
+  border: 1px solid rgba(232,115,42,0.18); pointer-events: none;
+}
+
+/* FOOTER */
+footer {
+  background: var(--bg2); border-top: 1px solid var(--border);
+  padding: 80px 56px 48px;
+}
+.footer-top {
+  display: grid; grid-template-columns: 1.5fr 1fr 1fr;
+  gap: 60px; margin-bottom: 64px; padding-bottom: 64px;
+  border-bottom: 1px solid var(--border);
+}
+.footer-logo { font-family: var(--serif); font-size: 28px; font-weight: 300; color: var(--white); margin-bottom: 14px; }
+.footer-tagline { font-size: 13px; font-weight: 300; color: var(--muted); line-height: 1.7; margin-bottom: 28px; }
+.footer-col-label { font-size: 9px; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: var(--orange); margin-bottom: 20px; }
+.footer-links { list-style: none; }
+.footer-links li { margin-bottom: 12px; }
+.footer-links a { font-size: 13px; font-weight: 300; color: var(--muted); transition: color 0.2s; }
+.footer-links a:hover { color: var(--white); }
+.footer-bottom { display: flex; justify-content: space-between; align-items: center; }
+.footer-copy { font-size: 11px; color: rgba(255,255,255,0.2); }
+
+/* MOBILE */
+@media (max-width: 900px) {
+  nav { padding: 18px 24px; }
+  nav.scrolled { padding: 14px 24px; }
+  .nav-links { display: none; }
+  .hero-content { padding: 0 24px 70px; }
+  .approach { grid-template-columns: 1fr; padding: 80px 24px; gap: 32px; }
+  .approach-label { position: static; }
+  .therapies { padding: 80px 24px; }
+  .therapy-cards { grid-template-columns: 1fr; }
+  .guide { grid-template-columns: 1fr; padding: 80px 24px; gap: 40px; }
+  .guide-left { position: static; }
+  .details { grid-template-columns: 1fr; padding: 80px 24px; gap: 40px; }
+  .details-grid { grid-template-columns: 1fr; }
+  .cta-section { grid-template-columns: 1fr; padding: 80px 24px; gap: 48px; }
+  .cta-img { display: none; }
+  footer { padding: 60px 24px 40px; }
+  .footer-top { grid-template-columns: 1fr; gap: 40px; }
+  .cursor, .cursor-ring { display: none; }
+  body { cursor: auto; }
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cur"></div>
+<div class="cursor-ring" id="ring"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="/" class="nav-logo">Danny <span>Disha</span></a>
+  <ul class="nav-links">
+    <li><a href="/about">За мен</a></li>
+    <li><a href="/individual-therapies" style="color:var(--white)">Индивидуални терапии</a></li>
+    <li><a href="/for-companies">За компании</a></li>
+    <li><a href="/contact" class="nav-cta">Запиши час</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg" id="heroBg"></div>
+  <div class="hero-vignette"></div>
+  <div class="hero-content">
+    <div class="hero-breadcrumb">Начало <span>/</span> Индивидуални терапии</div>
+    <h1 class="hero-h1">
+      <span class="line"><span>Индивидуална</span></span>
+      <span class="line"><span>терапевтична работа.</span></span>
+    </h1>
+    <p class="hero-sub">Работя с тялото, дишането и психиката едновременно — не като отделни неща. Персонализиран подход за всеки клиент.</p>
+    <div class="hero-cta">
+      <a href="/contact" class="btn-orange">Запиши час</a>
+    </div>
+  </div>
+</section>
+
+<!-- APPROACH -->
+<section class="approach">
+  <div class="approach-inner reveal">
+    <div class="approach-left">
+      <div class="section-eyebrow">Как работя</div>
+      <h2 class="approach-h2">Всяка сесия<br>започва с <em>разбиране.</em></h2>
+    </div>
+    <div class="approach-right">
+      <p class="approach-body">Работата започва с кратък разговор — какво носи напрежение, къде тялото задържа, как нервната система реагира на натиск. Не използвам универсални протоколи. Наблюдавам, усещам и адаптирам всяка сесия към конкретното състояние.</p>
+      <p class="approach-body">Целта не е просто релаксация — целта е тялото постепенно да премине от режим на защита към режим на възстановяване.</p>
+    </div>
+  </div>
+</section>
+
+<!-- THERAPIES -->
+<section class="therapies">
+  <div class="therapies-header reveal">
+    <div class="section-eyebrow">Формати</div>
+    <h2 class="therapies-h2">Три начина да<br><em>работим заедно</em></h2>
+  </div>
+  <div class="therapy-cards">
+    <div class="therapy-card reveal">
+      <div class="card-level">Вход</div>
+      <div class="card-name">Relax & Restore</div>
+      <div class="card-subtitle">Тайландски и балийски масаж</div>
+      <div class="card-divider"></div>
+      <p class="card-desc">За напрежение, умора и претоварване. Избирам подхода според състоянието на тялото и нервната система.</p>
+      <div class="card-price-wrap">
+        <div class="card-price">50 €</div>
+        <div class="card-price-note">студио<br>60 € на адрес</div>
+      </div>
+    </div>
+    <div class="therapy-card reveal" style="transition-delay:0.15s">
+      <div class="card-level">Процес</div>
+      <div class="card-name">Full Body Regulation</div>
+      <div class="card-subtitle">Серия от сесии за нервна система и структура</div>
+      <div class="card-divider"></div>
+      <p class="card-desc">За напрежение, което се връща отново и отново. Мануална терапия, дишане и биорегулация в последователност от сесии.</p>
+      <div class="card-price-wrap">
+        <div class="card-price" style="font-size:20px;padding-top:6px">При консултация</div>
+        <div class="card-price-note">серия<br>от сесии</div>
+      </div>
+    </div>
+    <div class="therapy-card reveal" style="transition-delay:0.3s">
+      <div class="card-level">Дълбока работа</div>
+      <div class="card-name">Dearmouring</div>
+      <div class="card-subtitle">Работа с напрежението, което тялото е натрупало с години</div>
+      <div class="card-divider"></div>
+      <p class="card-desc">За хронични блокажи и защитни модели. Интензивен интегративен процес — мануална работа, дишане и биорегулационна интеграция.</p>
+      <div class="card-price-wrap">
+        <div class="card-price" style="font-size:20px;padding-top:6px">При консултация</div>
+        <div class="card-price-note">индивидуална<br>програма</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GUIDE -->
+<section class="guide">
+  <div class="guide-header reveal">
+    <div class="section-eyebrow">Ориентир</div>
+    <h2 class="guide-h2">Как да разбера<br><em>коя е за мен?</em></h2>
+    <p class="guide-intro">Кликни върху терапията, която те привлича — виж дали се разпознаваш.</p>
+  </div>
+
+  <div class="accordion reveal">
+
+    <div class="acc-item" id="acc-1">
+      <button class="acc-trigger" onclick="toggleAcc('acc-1')">
+        <div class="acc-trigger-left">
+          <span class="acc-num">01</span>
+          <div>
+            <div class="acc-name">Relax & Restore</div>
+            <div class="acc-sub">Тайландски и балийски масаж — 50 € / 60 €</div>
+          </div>
+        </div>
+        <div class="acc-icon" id="icon-acc-1">+</div>
+      </button>
+      <div class="acc-body" id="body-acc-1">
+        <div class="acc-inner">
+          <div class="acc-col">
+            <div class="acc-block-title">Разпознаваш се, ако:</div>
+            <ul class="acc-list">
+              <li>Усещаш системна умора и натрупано напрежение</li>
+              <li>Тялото е сковано след работа или стрес</li>
+              <li>Търсиш възстановяване, не само релаксация</li>
+              <li>Не си пробвал структурирана терапия преди</li>
+            </ul>
+          </div>
+          <div class="acc-col">
+            <div class="acc-block-title">Какво се случва на сесията:</div>
+            <p class="acc-text">Започваме с кратък разговор. Работя с натиск по фасциални линии или с дълбоко тъканно отпускане — избирам подхода според нуждата. Една сесия, пълно внимание.</p>
+            <div class="acc-block-title" style="margin-top:20px">Какво получаваш след:</div>
+            <p class="acc-text">По-лека структура, подобрена подвижност, по-спокойна нервна система. Усещането трае дни.</p>
+          </div>
+          <div class="acc-col">
+            <div class="acc-block-title">Формат:</div>
+            <p class="acc-text">Единична сесия. Студио в София или на твой адрес.</p>
+            <div class="acc-price">50 € <span>студио</span></div>
+            <div class="acc-price-alt">60 € <span>на адрес</span></div>
+            <a href="/contact" class="acc-cta">Запиши час →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="acc-item" id="acc-2">
+      <button class="acc-trigger" onclick="toggleAcc('acc-2')">
+        <div class="acc-trigger-left">
+          <span class="acc-num">02</span>
+          <div>
+            <div class="acc-name">Full Body Regulation</div>
+            <div class="acc-sub">Серия от сесии — цена при консултация</div>
+          </div>
+        </div>
+        <div class="acc-icon" id="icon-acc-2">+</div>
+      </button>
+      <div class="acc-body" id="body-acc-2">
+        <div class="acc-inner">
+          <div class="acc-col">
+            <div class="acc-block-title">Разпознаваш се, ако:</div>
+            <ul class="acc-list">
+              <li>Напрежението се връща след всяка почивка</li>
+              <li>Имаш усещане за блокаж, който не се решава</li>
+              <li>Релаксиращите терапии помагат временно</li>
+              <li>Готов си за процес, не за еднократно решение</li>
+            </ul>
+          </div>
+          <div class="acc-col">
+            <div class="acc-block-title">Какво се случва на сесиите:</div>
+            <p class="acc-text">Работим в последователност — мануална терапия за структурата, дихателна регулация за нервната система, биорегулационна работа за дълбоките задръжки. Всяка сесия надгражда предишната.</p>
+            <div class="acc-block-title" style="margin-top:20px">Какво получаваш след:</div>
+            <p class="acc-text">Тялото започва да се саморегулира по-добре. Напрежението се връща по-рядко и с по-малка интензивност.</p>
+          </div>
+          <div class="acc-col">
+            <div class="acc-block-title">Формат:</div>
+            <p class="acc-text">Серия от последователни сесии. Честотата се определя индивидуално. Започва с консултация.</p>
+            <div class="acc-price" style="font-size:18px">При консултация</div>
+            <a href="/contact" class="acc-cta">Запиши консултация →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="acc-item" id="acc-3">
+      <button class="acc-trigger" onclick="toggleAcc('acc-3')">
+        <div class="acc-trigger-left">
+          <span class="acc-num">03</span>
+          <div>
+            <div class="acc-name">Dearmouring</div>
+            <div class="acc-sub">Работа с напрежението, натрупано с години — цена при консултация</div>
+          </div>
+        </div>
+        <div class="acc-icon" id="icon-acc-3">+</div>
+      </button>
+      <div class="acc-body" id="body-acc-3">
+        <div class="acc-inner">
+          <div class="acc-col">
+            <div class="acc-block-title">Разпознаваш се, ако:</div>
+            <ul class="acc-list">
+              <li>Носиш хронични блокажи от години</li>
+              <li>Тялото реагира защитно дори при малък стрес</li>
+              <li>Стандартните терапии не стигат достатъчно дълбоко</li>
+              <li>Готов си за дълбока и постепенна работа</li>
+            </ul>
+          </div>
+          <div class="acc-col">
+            <div class="acc-block-title">Какво се случва на сесиите:</div>
+            <p class="acc-text">Работим постепенно с хроничните защитни зони — целенасочена мануална работа, дихателна стабилизация и биорегулационна интеграция. Темпото се определя от готовността на системата.</p>
+            <div class="acc-block-title" style="margin-top:20px">Какво получаваш след:</div>
+            <p class="acc-text">Гъвкавост на системата, намалени защитни реакции, по-добра връзка с тялото. Бавно, но устойчиво.</p>
+          </div>
+          <div class="acc-col">
+            <div class="acc-block-title">Формат:</div>
+            <p class="acc-text">Индивидуална програма. Започва с предварителна консултация. Не е подходящо при активни психиатрични състояния без подкрепа.</p>
+            <div class="acc-price" style="font-size:18px">При консултация</div>
+            <a href="/contact" class="acc-cta">Запиши консултация →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="guide-unsure reveal">
+    <span class="guide-unsure-text">Не си сигурен коя е за теб?</span>
+    <a href="/contact" class="btn-ghost" style="font-size:12px;padding:12px 28px">Пиши ми — разбираме заедно</a>
+  </div>
+</section>
+
+<!-- DETAILS -->
+<section class="details">
+  <div class="reveal-l">
+    <div class="section-eyebrow">Практическа информация</div>
+    <h2 class="details-h2">Преди<br>да <em>запишеш</em></h2>
+  </div>
+  <div class="details-grid reveal-r">
+    <div class="detail-item">
+      <div class="detail-label">Локация</div>
+      <div class="detail-val">Студио в София или на твой адрес</div>
+    </div>
+    <div class="detail-item">
+      <div class="detail-label">Записване</div>
+      <div class="detail-val">Само с предварително запитване</div>
+    </div>
+    <div class="detail-item">
+      <div class="detail-label">Първа среща</div>
+      <div class="detail-val">Започва с кратък разговор</div>
+    </div>
+    <div class="detail-item">
+      <div class="detail-label">Здравословни условия</div>
+      <div class="detail-val">Консултация преди началото</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="reveal-l">
+    <h2 class="cta-h2">Запиши час —<br><em>позволи да се<br>погрижим за теб.</em></h2>
+    <p class="cta-sub">Не е нужно да знаеш точно какво търсиш. Първата стъпка е разговор — заедно намираме откъде да започнем.</p>
+    <div class="cta-btns">
+      <a href="/contact" class="btn-orange">Запиши час</a>
+      <a href="/about" class="btn-ghost">Научи повече за мен</a>
+    </div>
+  </div>
+  <div class="cta-img reveal-r">
+    <div class="cta-img-frame"></div>
+    <img src="https://picsum.photos/id/1072/900/1100" alt="Терапия">
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-logo">Danny Disha</div>
+      <p class="footer-tagline">Тяло. Психика. Регулация.<br>София, България</p>
+      <a href="/contact" class="btn-orange" style="font-size:11px;padding:12px 24px">Запиши час</a>
+    </div>
+    <div>
+      <div class="footer-col-label">Услуги</div>
+      <ul class="footer-links">
+        <li><a href="/individual-therapies">Индивидуални терапии</a></li>
+        <li><a href="/for-companies/office-wellness">Office Wellness</a></li>
+        <li><a href="/for-companies/lectures-training">Лекции & Обучения</a></li>
+        <li><a href="/for-companies/corporate-retreats">Corporate Retreats</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-label">Навигация</div>
+      <ul class="footer-links">
+        <li><a href="/about">За мен</a></li>
+        <li><a href="/contact">Контакт</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2025 Даниел Липчев. Всички права запазени.</span>
+    <span class="footer-copy">dannydisha.com</span>
+  </div>
+</footer>
+
+<script>
+const cur = document.getElementById('cur');
+const ring = document.getElementById('ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove', e=>{ mx=e.clientX; my=e.clientY; });
+(function anim(){ rx+=(mx-rx)*0.12; ry+=(my-ry)*0.12; cur.style.left=mx+'px'; cur.style.top=my+'px'; ring.style.left=rx+'px'; ring.style.top=ry+'px'; requestAnimationFrame(anim); })();
+document.querySelectorAll('a,button,.therapy-card').forEach(el=>{
+  el.addEventListener('mouseenter',()=>document.body.classList.add('hovering'));
+  el.addEventListener('mouseleave',()=>document.body.classList.remove('hovering'));
+});
+
+const nav = document.getElementById('nav');
+window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>50),{passive:true});
+
+const heroBg = document.getElementById('heroBg');
+setTimeout(()=>heroBg.classList.add('loaded'),80);
+window.addEventListener('scroll',()=>{ heroBg.style.transform=`translateY(${scrollY*0.28}px)`; },{passive:true});
+
+const io = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(!e.isIntersecting) return;
+    const d = parseFloat(e.target.style.transitionDelay||0)*1000;
+    setTimeout(()=>e.target.classList.add('on'),d);
+    io.unobserve(e.target);
+  });
+},{threshold:0.1,rootMargin:'0px 0px -60px 0px'});
+document.querySelectorAll('.reveal,.reveal-l,.reveal-r').forEach(el=>io.observe(el));
+
+function toggleAcc(id) {
+  const body = document.getElementById('body-' + id);
+  const icon = document.getElementById('icon-' + id);
+  const isOpen = body.classList.contains('open');
+  document.querySelectorAll('.acc-body').forEach(b => b.classList.remove('open'));
+  document.querySelectorAll('.acc-icon').forEach(i => i.classList.remove('open'));
+  if (!isOpen) {
+    body.classList.add('open');
+    icon.classList.add('open');
+  }
+}
+</script>
+</body>
+</html>

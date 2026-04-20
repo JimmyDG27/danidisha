@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Corporate Retreats — Danny Disha</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0a0a;--bg2:#0e0e0e;--surface:#141414;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);--orange:#e8732a;--orange-l:#f08c4a;--white:#ffffff;--off:rgba(255,255,255,0.65);--muted:rgba(255,255,255,0.35);--serif:'Cormorant Garamond',Georgia,serif;--sans:'DM Sans',sans-serif;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}a{color:inherit;text-decoration:none;}html{scroll-behavior:smooth;}
+body{font-family:var(--sans);background:var(--bg);color:var(--white);overflow-x:hidden;cursor:none;}
+.cursor{position:fixed;pointer-events:none;z-index:9999;width:8px;height:8px;background:var(--orange);border-radius:50%;transform:translate(-50%,-50%);}
+.cursor-ring{position:fixed;pointer-events:none;z-index:9998;width:36px;height:36px;border:1px solid rgba(232,115,42,0.5);border-radius:50%;transform:translate(-50%,-50%);transition:width 0.3s,height 0.3s,border-color 0.3s;}
+body.hovering .cursor-ring{width:56px;height:56px;border-color:var(--orange);}
+nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:28px 56px;display:flex;align-items:center;justify-content:space-between;transition:padding 0.4s,background 0.4s,border-color 0.4s;border-bottom:1px solid transparent;}
+nav.scrolled{padding:16px 56px;background:rgba(10,10,10,0.95);backdrop-filter:blur(20px);border-bottom-color:var(--border);}
+.nav-logo{font-family:var(--serif);font-size:20px;font-weight:300;color:var(--white);letter-spacing:0.08em;}.nav-logo span{color:var(--orange);}
+.nav-links{display:flex;align-items:center;gap:40px;list-style:none;}
+.nav-links a{font-size:11px;font-weight:400;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);transition:color 0.25s;position:relative;}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;background:var(--orange);transform:scaleX(0);transform-origin:right;transition:transform 0.3s;}
+.nav-links a:hover{color:var(--white);}.nav-links a:hover::after{transform:scaleX(1);transform-origin:left;}
+.nav-active{color:var(--white)!important;}.nav-cta{font-size:11px!important;font-weight:500!important;letter-spacing:0.14em!important;color:var(--bg)!important;background:var(--orange);padding:11px 24px!important;border-radius:8px;}.nav-cta::after{display:none!important;}.nav-cta:hover{background:var(--orange-l)!important;}
+.reveal,.reveal-l,.reveal-r{opacity:0;transition:opacity 1.1s cubic-bezier(0.25,0.46,0.45,0.94),transform 1.1s cubic-bezier(0.25,0.46,0.45,0.94);}
+.reveal{transform:translateY(32px);}.reveal-l{transform:translateX(-32px);}.reveal-r{transform:translateX(32px);}
+.reveal.on,.reveal-l.on,.reveal-r.on{opacity:1;transform:none;}
+.btn-orange{display:inline-block;font-size:12px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--bg);background:var(--orange);padding:16px 36px;border-radius:8px;transition:background 0.25s,transform 0.25s;}
+.btn-orange:hover{background:var(--orange-l);transform:translateY(-2px);}
+.btn-ghost{display:inline-block;font-size:12px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--off);border:1px solid var(--border2);padding:16px 36px;border-radius:8px;transition:border-color 0.25s,color 0.25s,transform 0.25s;}
+.btn-ghost:hover{border-color:var(--orange);color:var(--orange);transform:translateY(-2px);}
+.section-eyebrow{font-size:10px;font-weight:500;letter-spacing:0.22em;text-transform:uppercase;color:var(--orange);display:flex;align-items:center;gap:12px;margin-bottom:20px;}
+.section-eyebrow::before{content:'';width:28px;height:1px;background:var(--orange);}
+@keyframes lineUp{to{opacity:1;transform:translateY(0);}}@keyframes fadeUp{to{opacity:1;transform:translateY(0);}}
+
+.hero{position:relative;height:100vh;min-height:680px;display:flex;align-items:flex-end;overflow:hidden;}
+.hero-bg{position:absolute;inset:0;background:url('https://picsum.photos/id/1035/1800/1000') center/cover no-repeat;transform:scale(1.08);transition:transform 9s cubic-bezier(0.25,0.46,0.45,0.94);will-change:transform;}
+.hero-bg.loaded{transform:scale(1.02);}
+.hero-vignette{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,10,1) 0%,rgba(10,10,10,0.72) 45%,rgba(10,10,10,0.15) 80%),linear-gradient(to right,rgba(10,10,10,0.65) 0%,transparent 60%);}
+.hero-content{position:relative;z-index:2;padding:0 56px 90px;max-width:860px;}
+.hero-breadcrumb{display:flex;align-items:center;gap:10px;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:28px;opacity:0;animation:fadeUp 0.8s 0.2s forwards;}
+.hero-breadcrumb span{color:var(--orange);}
+.hero-breadcrumb::before{content:'';width:32px;height:1px;background:var(--orange);display:inline-block;}
+.hero-h1{font-family:var(--serif);font-size:clamp(52px,8vw,110px);font-weight:300;line-height:0.93;letter-spacing:-0.02em;color:var(--white);margin-bottom:28px;}
+.hero-h1 .line{display:block;overflow:hidden;}
+.hero-h1 .line span{display:block;opacity:0;transform:translateY(100%);animation:lineUp 0.9s cubic-bezier(0.16,1,0.3,1) forwards;}
+.hero-h1 .line:nth-child(1) span{animation-delay:0.3s;}
+.hero-h1 .line:nth-child(2) span{animation-delay:0.48s;font-style:italic;color:var(--orange-l);}
+.hero-sub{font-size:16px;font-weight:300;color:var(--off);line-height:1.75;max-width:480px;margin-bottom:44px;opacity:0;animation:fadeUp 0.8s 0.9s forwards;transform:translateY(16px);}
+.hero-actions{opacity:0;animation:fadeUp 0.8s 1.05s forwards;transform:translateY(16px);display:flex;gap:14px;flex-wrap:wrap;}
+.hero-scroll-ind{position:absolute;bottom:40px;right:56px;z-index:2;display:flex;flex-direction:column;align-items:center;gap:10px;opacity:0;animation:fadeUp 1s 1.6s forwards;}
+.hero-scroll-ind span{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);writing-mode:vertical-rl;}
+.scroll-bar{width:1px;height:60px;background:linear-gradient(to bottom,var(--orange),transparent);animation:scrollBar 2s 2.2s infinite;}
+@keyframes scrollBar{0%{transform:scaleY(0);transform-origin:top;opacity:1;}50%{transform:scaleY(1);transform-origin:top;}51%{transform:scaleY(1);transform-origin:bottom;}100%{transform:scaleY(0);transform-origin:bottom;opacity:0;}}
+
+.what{background:var(--bg2);padding:120px 56px;border-top:1px solid var(--border);display:grid;grid-template-columns:1fr 1.5fr;gap:100px;align-items:center;}
+.what-h2{font-family:var(--serif);font-size:clamp(30px,3.5vw,48px);font-weight:300;line-height:1.1;color:var(--white);margin-bottom:24px;}
+.what-h2 em{font-style:italic;color:var(--orange-l);}
+.what-body{font-size:15px;font-weight:300;color:var(--off);line-height:1.85;margin-bottom:18px;}
+.what-pull{font-family:var(--serif);font-size:clamp(18px,2vw,24px);font-weight:300;font-style:italic;color:var(--white);line-height:1.5;border-left:2px solid var(--orange);padding:4px 0 4px 20px;margin-top:28px;}
+
+.structures{background:var(--bg);padding:120px 56px;border-top:1px solid var(--border);}
+.structures-header{margin-bottom:64px;}
+.structures-h2{font-family:var(--serif);font-size:clamp(36px,4vw,56px);font-weight:300;line-height:1.1;color:var(--white);}
+.structures-h2 em{font-style:italic;color:var(--orange-l);}
+.structures-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;}
+.structure-card{background:var(--surface);border:1px solid var(--border);padding:36px 28px;position:relative;overflow:hidden;transition:border-color 0.4s;}
+.structure-card:hover{border-color:rgba(232,115,42,0.25);}
+.structure-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--orange);transform:scaleX(0);transform-origin:left;transition:transform 0.5s cubic-bezier(0.16,1,0.3,1);}
+.structure-card:hover::before{transform:scaleX(1);}
+.structure-duration{font-family:var(--serif);font-size:36px;font-weight:300;color:var(--orange);line-height:1;margin-bottom:12px;}
+.structure-name{font-family:var(--serif);font-size:20px;font-weight:300;color:var(--white);margin-bottom:8px;}
+.structure-desc{font-size:13px;font-weight:300;color:var(--muted);line-height:1.65;}
+
+.components{background:var(--bg2);padding:120px 56px;border-top:1px solid var(--border);}
+  .comp-header{max-width:680px;margin-bottom:72px;}
+  .comp-h2{font-family:var(--serif);font-size:clamp(36px,4vw,56px);font-weight:300;line-height:1.1;color:var(--white);margin-bottom:16px;}
+  .comp-h2 em{font-style:italic;color:var(--orange-l);}
+  .comp-intro{font-size:15px;font-weight:300;color:var(--muted);line-height:1.7;}
+
+  .comp-rows{display:flex;flex-direction:column;border-top:1px solid var(--border);}
+  .comp-row{
+    display:grid;
+    grid-template-columns:56px 1fr 1.2fr 1.2fr;
+    gap:40px;
+    align-items:center;
+    padding:32px 0;
+    border-bottom:1px solid var(--border);
+    transition:background 0.3s;
+    position:relative;
+  }
+  .comp-row::before{
+    content:'';
+    position:absolute;left:0;top:0;bottom:0;width:0;
+    background:rgba(232,115,42,0.04);
+    transition:width 0.4s ease;
+  }
+  .comp-row:hover::before{width:100%;}
+  .comp-row-num{
+    font-family:var(--serif);font-size:13px;
+    font-weight:300;color:var(--orange);
+    letter-spacing:0.1em;
+  }
+  .comp-row-title{
+    font-family:var(--serif);
+    font-size:clamp(18px,2vw,24px);font-weight:300;color:var(--white);line-height:1.2;
+  }
+  .comp-row-desc{
+    font-size:13px;font-weight:300;color:var(--muted);line-height:1.65;
+    padding-left:24px;border-left:1px solid var(--border);
+  }
+  .comp-row-outcome{
+    font-size:13px;font-weight:300;font-style:italic;
+    color:var(--orange);line-height:1.55;
+    padding-left:24px;border-left:1px solid rgba(232,115,42,0.2);
+  }
+
+  .comp-footer{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:28px 0 0;gap:24px;flex-wrap:wrap;
+  }
+  .comp-footer-text{font-size:13px;font-weight:300;color:var(--muted);}
+  .comp-footer-cta{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:11px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;
+    color:var(--orange);white-space:nowrap;transition:gap 0.3s;flex-shrink:0;
+  }
+  .comp-footer-cta:hover{gap:16px;}
+
+.different{background:var(--bg);padding:120px 56px;border-top:1px solid var(--border);}
+  .different-header{max-width:680px;margin-bottom:64px;}
+  .different-h2{font-family:var(--serif);font-size:clamp(36px,4vw,56px);font-weight:300;line-height:1.15;color:var(--white);margin-bottom:16px;}
+  .different-h2 em{font-style:italic;color:var(--orange-l);display:block;}
+  .different-intro{font-size:15px;font-weight:300;color:var(--muted);line-height:1.7;}
+  .different-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;}
+  .diff-card{
+    background:var(--surface);border:1px solid var(--border);
+    padding:40px 36px;transition:border-color 0.4s,background 0.4s;
+    position:relative;overflow:hidden;
+  }
+  .diff-card:hover{border-color:rgba(232,115,42,0.25);background:#181818;}
+  .diff-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--orange);transform:scaleX(0);transform-origin:left;transition:transform 0.5s cubic-bezier(0.16,1,0.3,1);}
+  .diff-card:hover::before{transform:scaleX(1);}
+  .diff-label{font-size:9px;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:var(--orange);margin-bottom:12px;}
+  .diff-title{font-family:var(--serif);font-size:22px;font-weight:300;color:var(--white);margin-bottom:14px;line-height:1.2;}
+  .diff-desc{font-size:13px;font-weight:300;color:var(--muted);line-height:1.7;}
+
+.cta-section{background:var(--bg2);padding:130px 56px;border-top:1px solid var(--border);text-align:center;position:relative;overflow:hidden;}
+.cta-deco{position:absolute;top:-40px;left:50%;transform:translateX(-50%);font-family:var(--serif);font-size:320px;font-weight:300;color:rgba(232,115,42,0.04);line-height:1;pointer-events:none;user-select:none;}
+.cta-inner{position:relative;z-index:1;max-width:660px;margin:0 auto;}
+.cta-eyebrow{font-size:10px;font-weight:500;letter-spacing:0.22em;text-transform:uppercase;color:var(--orange);display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:28px;}
+.cta-eyebrow::before,.cta-eyebrow::after{content:'';width:28px;height:1px;background:var(--orange);}
+.cta-h2{font-family:var(--serif);font-size:clamp(36px,5vw,62px);font-weight:300;line-height:1.05;color:var(--white);margin-bottom:20px;}
+.cta-h2 em{font-style:italic;color:var(--orange-l);}
+.cta-sub{font-size:15px;font-weight:300;color:var(--off);line-height:1.8;margin-bottom:44px;max-width:500px;margin-left:auto;margin-right:auto;}
+.cta-btns{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;}
+
+footer{background:var(--bg2);border-top:1px solid var(--border);padding:80px 56px 48px;}
+.footer-top{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:60px;margin-bottom:64px;padding-bottom:64px;border-bottom:1px solid var(--border);}
+.footer-logo{font-family:var(--serif);font-size:28px;font-weight:300;color:var(--white);margin-bottom:14px;}
+.footer-tagline{font-size:13px;font-weight:300;color:var(--muted);line-height:1.7;margin-bottom:28px;}
+.footer-col-label{font-size:9px;font-weight:500;letter-spacing:0.22em;text-transform:uppercase;color:var(--orange);margin-bottom:20px;}
+.footer-links{list-style:none;}.footer-links li{margin-bottom:12px;}
+.footer-links a{font-size:13px;font-weight:300;color:var(--muted);transition:color 0.2s;}.footer-links a:hover{color:var(--white);}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;}
+.footer-copy{font-size:11px;color:rgba(255,255,255,0.2);}
+
+@media(max-width:900px){
+  nav{padding:18px 24px;}nav.scrolled{padding:14px 24px;}.nav-links{display:none;}
+  .hero-content{padding:0 24px 70px;}.hero-scroll-ind{right:24px;}
+  .what{grid-template-columns:1fr;padding:80px 24px;gap:40px;}
+  .structures{padding:80px 24px;}.structures-grid{grid-template-columns:1fr 1fr;}
+  .components{grid-template-columns:1fr;padding:80px 24px;gap:32px;}.components-label{position:static;}
+  .different{padding:80px 24px;}.different-grid{grid-template-columns:1fr;}
+  .cta-section{padding:80px 24px;}
+  footer{padding:60px 24px 40px;}.footer-top{grid-template-columns:1fr;gap:40px;}
+  .cursor,.cursor-ring{display:none;}body{cursor:auto;}
+}
+</style>
+</head>
+<body>
+<div class="cursor" id="cur"></div>
+<div class="cursor-ring" id="ring"></div>
+<nav id="nav">
+  <a href="/" class="nav-logo">Danny <span>Disha</span></a>
+  <ul class="nav-links">
+    <li><a href="/about">За мен</a></li>
+    <li><a href="/individual-therapies">Индивидуални терапии</a></li>
+    <li><a href="/for-companies" class="nav-active">За компании</a></li>
+    <li><a href="/contact" class="nav-cta">Запиши час</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg" id="heroBg"></div>
+  <div class="hero-vignette"></div>
+  <div class="hero-content">
+    <div class="hero-breadcrumb">За компании <span>/</span> Corporate Retreats</div>
+    <h1 class="hero-h1">
+      <span class="line"><span>Corporate</span></span>
+      <span class="line"><span>Retreats.</span></span>
+    </h1>
+    <p class="hero-sub">Структурирани интердисциплинарни ритрийти за лидерска стабилизация, екипна синхронизация и стратегическа яснота.</p>
+    <div class="hero-actions">
+      <a href="/contact" class="btn-orange">Изпрати запитване</a>
+      <a href="/for-companies" class="btn-ghost">Обратно към За компании</a>
+    </div>
+  </div>
+  <div class="hero-scroll-ind"><div class="scroll-bar"></div><span>Scroll</span></div>
+</section>
+
+<section class="what">
+  <div class="reveal-l">
+    <div class="section-eyebrow">Какво е</div>
+    <h2 class="what-h2">Работа върху системата, не <em>само в нея.</em></h2>
+  </div>
+  <div class="reveal-r">
+    <p class="what-body">В ежедневната динамика организациите функционират в режим на реакция. Ритрийтът създава среда за по-дълбока регулация, стратегическо мислене и възстановяване на екипната динамика.</p>
+    <p class="what-body">Той позволява временно излизане от оперативния натиск — за да се работи върху системата, а не само да се реагира в нея.</p>
+    <div class="what-pull">Когато средата се промени, перспективата също се променя.</div>
+  </div>
+</section>
+
+<section class="structures">
+  <div class="structures-header reveal">
+    <div class="section-eyebrow">Формати</div>
+    <h2 class="structures-h2">Четири структури,<br><em>един стандарт.</em></h2>
+  </div>
+  <div class="structures-grid">
+    <div class="structure-card reveal">
+      <div class="structure-duration">1 ден</div>
+      <div class="structure-name">Стратегически offsite</div>
+      <p class="structure-desc">Интензивен еднодневен формат. Регулационни практики, стратегически сесии и лидерска интеграция.</p>
+    </div>
+    <div class="structure-card reveal" style="transition-delay:0.1s">
+      <div class="structure-duration">2–3 дни</div>
+      <div class="structure-name">Интегративен ритрийт</div>
+      <p class="structure-desc">Пълен формат с регулационни практики, обучителни модули и биорегулационни формати.</p>
+    </div>
+    <div class="structure-card reveal" style="transition-delay:0.2s">
+      <div class="structure-duration">Интензив</div>
+      <div class="structure-name">Лидерски интензив</div>
+      <p class="structure-desc">Фокусиран формат за малък лидерски екип. Дълбока работа с конкретни предизвикателства.</p>
+    </div>
+    <div class="structure-card reveal" style="transition-delay:0.3s">
+      <div class="structure-duration">Комбо</div>
+      <div class="structure-name">Ритрийт + програма</div>
+      <p class="structure-desc">Ритрийтът като начало на дългосрочна организационна програма с последваща интеграция.</p>
+    </div>
+  </div>
+</section>
+
+<section class="components">
+  <div class="comp-header reveal">
+    <div class="section-eyebrow">Какво включва</div>
+    <h2 class="comp-h2">Всеки елемент<br>има <em>конкретна цел.</em></h2>
+    <p class="comp-intro">Ритрийтът не е сбор от активности. Всеки компонент е избран защото решава нещо конкретно за екипа.</p>
+  </div>
+  <div class="comp-rows">
+
+    <div class="comp-row reveal">
+      <div class="comp-row-num">01</div>
+      <div class="comp-row-title">Регулационни практики</div>
+      <div class="comp-row-desc">Движение и дишане за преход от оперативен към стратегически режим.</div>
+      <div class="comp-row-outcome">Екипът влиза в сесиите регулиран и фокусиран — не реактивен.</div>
+    </div>
+
+    <div class="comp-row reveal" style="transition-delay:0.08s">
+      <div class="comp-row-num">02</div>
+      <div class="comp-row-title">Стратегически работни сесии</div>
+      <div class="comp-row-desc">Фасилитирана групова работа за анализ, приоритизация и яснота — не brainstorming.</div>
+      <div class="comp-row-outcome">Конкретни решения и следващи стъпки, не само добри разговори.</div>
+    </div>
+
+    <div class="comp-row reveal" style="transition-delay:0.16s">
+      <div class="comp-row-num">03</div>
+      <div class="comp-row-title">Обучителни модули</div>
+      <div class="comp-row-desc">Практично знание за нервна регулация и лидерски капацитет под натиск.</div>
+      <div class="comp-row-outcome">Лидерите се връщат с инструменти, не само с вдъхновение.</div>
+    </div>
+
+    <div class="comp-row reveal" style="transition-delay:0.24s">
+      <div class="comp-row-num">04</div>
+      <div class="comp-row-title">Биорегулационни формати</div>
+      <div class="comp-row-desc">При нужда включвам специалисти от мрежата ми — физиотерапевти, психотерапевти и други.</div>
+      <div class="comp-row-outcome">Дълбока работа с хроничното натоварване на ключови хора.</div>
+    </div>
+
+    <div class="comp-row reveal" style="transition-delay:0.32s">
+      <div class="comp-row-num">05</div>
+      <div class="comp-row-title">Лидерска интеграция</div>
+      <div class="comp-row-desc">Индивидуални или малки групови разговори в края. Всеки лидер излиза с ясна лична рамка.</div>
+      <div class="comp-row-outcome">Ритрийтът не свършва в неделя. Той продължава в начина на работа.</div>
+    </div>
+
+  </div>
+  <div class="comp-footer reveal">
+    <p class="comp-footer-text">Компонентите се подбират спрямо целта — не всичко е задължително за всеки ритрийт.</p>
+    <a href="/contact" class="comp-footer-cta">Обсъди формата →</a>
+  </div>
+</section>
+
+<section class="different">
+  <div class="different-header reveal">
+    <div class="section-eyebrow">Защо е различно</div>
+    <h2 class="different-h2">Структурирано.<br><em>Интердисциплинарно.<br>Измеримо.</em></h2>
+    <p class="different-intro">Ритрийтът е изграден около конкретна нужда на организацията — не е стандартен формат приложен към всички.</p>
+  </div>
+  <div class="different-grid">
+    <div class="diff-card reveal">
+      <div class="diff-label">Методология</div>
+      <div class="diff-title">Работи се с ясна структура</div>
+      <p class="diff-desc">Всяка програма се изгражда след предварителен разговор. Не се импровизира — компонентите, екипът и последователността са планирани предварително.</p>
+    </div>
+    <div class="diff-card reveal" style="transition-delay:0.1s">
+      <div class="diff-label">Интердисциплинарност</div>
+      <div class="diff-title">Не работиш само с един специалист</div>
+      <p class="diff-desc">При нужда включвам физиотерапевти, психотерапевти и биорегулационни практици. Мрежата позволява дълбочина, която един човек не може да осигури.</p>
+    </div>
+    <div class="diff-card reveal" style="transition-delay:0.2s">
+      <div class="diff-label">Приложимост</div>
+      <div class="diff-title">Резултатите продължават след ритрийта</div>
+      <p class="diff-desc">Всеки участник излиза с конкретни инструменти и лична рамка. Не само с добри спомени от уикенда.</p>
+    </div>
+    <div class="diff-card reveal" style="transition-delay:0.3s">
+      <div class="diff-label">Мащабируемост</div>
+      <div class="diff-title">От 5 до 50+ души</div>
+      <p class="diff-desc">Форматът се адаптира към размера на екипа — от малък лидерски кръг до по-широка организационна структура.</p>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="cta-deco">"</div>
+  <div class="cta-inner reveal">
+    <div class="cta-eyebrow">Изграждаме заедно</div>
+    <h2 class="cta-h2">Кажи ми какво<br>носи <em>екипът ти.</em></h2>
+    <p class="cta-sub">Не е нужно да знаеш формата предварително. Разговаряме за ситуацията и изграждаме ритрийта около нея. Отговарям до 24 часа.</p>
+    <div class="cta-btns">
+      <a href="/contact" class="btn-orange">Изпрати запитване</a>
+      <a href="/for-companies" class="btn-ghost">Виж другите формати</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-logo">Danny Disha</div>
+      <p class="footer-tagline">Тяло. Психика. Регулация.<br>София, България</p>
+      <a href="/contact" class="btn-orange" style="font-size:11px;padding:12px 24px;margin-top:8px;display:inline-block">Запиши час</a>
+    </div>
+    <div>
+      <div class="footer-col-label">Услуги</div>
+      <ul class="footer-links">
+        <li><a href="/individual-therapies">Индивидуални терапии</a></li>
+        <li><a href="/for-companies/office-wellness">Office Wellness</a></li>
+        <li><a href="/for-companies/lectures-training">Лекции & Обучения</a></li>
+        <li><a href="/for-companies/corporate-retreats">Corporate Retreats</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-label">Навигация</div>
+      <ul class="footer-links">
+        <li><a href="/about">За мен</a></li>
+        <li><a href="/contact">Контакт</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2025 Даниел Липчев. Всички права запазени.</span>
+    <span class="footer-copy">dannydisha.com</span>
+  </div>
+</footer>
+
+<script>
+const cur=document.getElementById('cur'),ring=document.getElementById('ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+(function anim(){rx+=(mx-rx)*0.12;ry+=(my-ry)*0.12;cur.style.left=mx+'px';cur.style.top=my+'px';ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(anim);})();
+document.querySelectorAll('a,button').forEach(el=>{el.addEventListener('mouseenter',()=>document.body.classList.add('hovering'));el.addEventListener('mouseleave',()=>document.body.classList.remove('hovering'));});
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>50),{passive:true});
+const heroBg=document.getElementById('heroBg');
+setTimeout(()=>heroBg.classList.add('loaded'),80);
+window.addEventListener('scroll',()=>{heroBg.style.transform=`translateY(${scrollY*0.28}px) scale(1.02)`;},{passive:true});
+const io=new IntersectionObserver(entries=>{entries.forEach(e=>{if(!e.isIntersecting)return;setTimeout(()=>e.target.classList.add('on'),parseFloat(e.target.style.transitionDelay||0)*1000);io.unobserve(e.target);});},{threshold:0.06,rootMargin:'0px 0px -20px 0px'});
+document.querySelectorAll('.reveal,.reveal-l,.reveal-r').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>

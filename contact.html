@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Контакт — Danny Disha</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:      #0a0a0a;
+  --bg2:     #0e0e0e;
+  --surface: #141414;
+  --border:  rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.13);
+  --orange:  #e8732a;
+  --orange-l:#f08c4a;
+  --white:   #ffffff;
+  --off:     rgba(255,255,255,0.65);
+  --muted:   rgba(255,255,255,0.35);
+  --serif:   'Cormorant Garamond', Georgia, serif;
+  --sans:    'DM Sans', sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+a { color: inherit; text-decoration: none; }
+html { scroll-behavior: smooth; }
+body { font-family: var(--sans); background: var(--bg); color: var(--white); overflow-x: hidden; cursor: none; min-height: 100vh; }
+
+.cursor { position: fixed; pointer-events: none; z-index: 9999; width: 8px; height: 8px; background: var(--orange); border-radius: 50%; transform: translate(-50%,-50%); }
+.cursor-ring { position: fixed; pointer-events: none; z-index: 9998; width: 36px; height: 36px; border: 1px solid rgba(232,115,42,0.5); border-radius: 50%; transform: translate(-50%,-50%); transition: width 0.3s, height 0.3s, border-color 0.3s; }
+body.hovering .cursor-ring { width: 56px; height: 56px; border-color: var(--orange); }
+
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 500; padding: 28px 56px; display: flex; align-items: center; justify-content: space-between; transition: padding 0.4s, background 0.4s, border-color 0.4s; border-bottom: 1px solid transparent; background: rgba(10,10,10,0.95); backdrop-filter: blur(20px); border-bottom-color: var(--border); }
+.nav-logo { font-family: var(--serif); font-size: 20px; font-weight: 300; color: var(--white); letter-spacing: 0.08em; }
+.nav-logo span { color: var(--orange); }
+.nav-links { display: flex; align-items: center; gap: 40px; list-style: none; }
+.nav-links a { font-size: 11px; font-weight: 400; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); transition: color 0.25s; position: relative; }
+.nav-links a::after { content: ''; position: absolute; bottom: -4px; left: 0; right: 0; height: 1px; background: var(--orange); transform: scaleX(0); transform-origin: right; transition: transform 0.3s; }
+.nav-links a:hover { color: var(--white); }
+.nav-links a:hover::after { transform: scaleX(1); transform-origin: left; }
+.nav-cta { font-size: 11px !important; font-weight: 500 !important; letter-spacing: 0.14em !important; color: var(--bg) !important; background: var(--orange); padding: 11px 24px !important; border-radius: 8px; }
+.nav-cta::after { display: none !important; }
+.nav-cta:hover { background: var(--orange-l) !important; }
+
+@keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+
+/* ── LAYOUT ── */
+.page {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 100vh;
+}
+
+/* ── LEFT — INFO ── */
+.info {
+  background: var(--bg2);
+  padding: 140px 64px 80px;
+  display: flex; flex-direction: column; justify-content: space-between;
+  border-right: 1px solid var(--border);
+  position: sticky; top: 0; height: 100vh;
+}
+.info-top { }
+.info-eyebrow {
+  font-size: 10px; font-weight: 500; letter-spacing: 0.22em;
+  text-transform: uppercase; color: var(--orange);
+  display: flex; align-items: center; gap: 12px; margin-bottom: 32px;
+  opacity: 0; animation: fadeUp 0.8s 0.2s forwards; transform: translateY(12px);
+}
+.info-eyebrow::before { content: ''; width: 28px; height: 1px; background: var(--orange); }
+.info-h1 {
+  font-family: var(--serif);
+  font-size: clamp(44px, 5vw, 72px);
+  font-weight: 300; line-height: 1.0;
+  color: var(--white); margin-bottom: 28px;
+  opacity: 0; animation: fadeUp 0.9s 0.35s forwards; transform: translateY(20px);
+}
+.info-h1 em { font-style: italic; color: var(--orange-l); }
+.info-sub {
+  font-size: 15px; font-weight: 300; color: var(--off);
+  line-height: 1.8; max-width: 380px; margin-bottom: 56px;
+  opacity: 0; animation: fadeUp 0.8s 0.55s forwards; transform: translateY(16px);
+}
+
+.info-details {
+  opacity: 0; animation: fadeUp 0.8s 0.75s forwards; transform: translateY(16px);
+}
+.info-detail {
+  padding: 20px 0; border-top: 1px solid var(--border);
+  display: flex; align-items: flex-start; gap: 16px;
+}
+.info-detail:last-child { border-bottom: 1px solid var(--border); }
+.info-detail-label {
+  font-size: 9px; font-weight: 500; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--orange);
+  min-width: 100px; padding-top: 2px;
+}
+.info-detail-val {
+  font-size: 14px; font-weight: 300; color: var(--off); line-height: 1.5;
+}
+
+.info-bottom {
+  opacity: 0; animation: fadeUp 0.8s 0.9s forwards; transform: translateY(16px);
+}
+.info-bottom-text {
+  font-family: var(--serif);
+  font-size: clamp(18px, 2vw, 24px);
+  font-weight: 300; font-style: italic;
+  color: rgba(255,255,255,0.25); line-height: 1.4;
+}
+
+/* ── RIGHT — FORM ── */
+.form-side {
+  background: var(--bg);
+  padding: 140px 64px 80px;
+  display: flex; flex-direction: column; justify-content: center;
+}
+.form-wrap {
+  max-width: 480px;
+  opacity: 0; animation: fadeUp 0.9s 0.5s forwards; transform: translateY(24px);
+}
+
+.form-group { margin-bottom: 28px; }
+.form-label {
+  display: block; font-size: 10px; font-weight: 500;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 10px;
+}
+.form-input, .form-textarea, .form-select {
+  width: 100%; background: transparent;
+  border: none; border-bottom: 1px solid var(--border2);
+  color: var(--white); font-family: var(--sans);
+  font-size: 15px; font-weight: 300;
+  padding: 12px 0; outline: none;
+  transition: border-color 0.3s;
+  appearance: none; -webkit-appearance: none;
+}
+.form-input::placeholder, .form-textarea::placeholder { color: var(--muted); }
+.form-input:focus, .form-textarea:focus, .form-select:focus { border-bottom-color: var(--orange); }
+.form-textarea { resize: none; height: 100px; }
+.form-select { cursor: none; }
+.form-select option { background: #1a1a1a; color: var(--white); }
+
+.form-type-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+}
+.form-type-btn {
+  background: transparent; border: 1px solid var(--border);
+  color: var(--muted); font-family: var(--sans);
+  font-size: 12px; font-weight: 400; letter-spacing: 0.06em;
+  padding: 12px 16px; border-radius: 4px;
+  cursor: none; transition: border-color 0.25s, color 0.25s, background 0.25s;
+  text-align: left;
+}
+.form-type-btn:hover { border-color: var(--border2); color: var(--off); }
+.form-type-btn.selected {
+  border-color: var(--orange); color: var(--orange);
+  background: rgba(232,115,42,0.06);
+}
+
+.form-submit {
+  width: 100%; background: var(--orange);
+  border: none; color: var(--bg);
+  font-family: var(--sans); font-size: 13px; font-weight: 500;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 18px 32px; border-radius: 8px;
+  cursor: none; margin-top: 8px;
+  transition: background 0.25s, transform 0.25s;
+}
+.form-submit:hover { background: var(--orange-l); transform: translateY(-2px); }
+
+.form-note {
+  font-size: 12px; font-weight: 300; color: var(--muted);
+  margin-top: 16px; line-height: 1.6; text-align: center;
+}
+
+/* SUCCESS STATE */
+.form-success {
+  display: none; text-align: center; padding: 40px 0;
+}
+.form-success.show { display: block; }
+.form-success-icon {
+  width: 48px; height: 48px; border-radius: 50%;
+  border: 1px solid var(--orange);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 24px; color: var(--orange); font-size: 20px;
+}
+.form-success-title {
+  font-family: var(--serif); font-size: 32px; font-weight: 300;
+  color: var(--white); margin-bottom: 12px;
+}
+.form-success-sub { font-size: 14px; font-weight: 300; color: var(--muted); line-height: 1.7; }
+
+/* FOOTER */
+footer { background: var(--bg2); border-top: 1px solid var(--border); padding: 60px 56px 40px; }
+.footer-top { display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 60px; margin-bottom: 48px; padding-bottom: 48px; border-bottom: 1px solid var(--border); }
+.footer-logo { font-family: var(--serif); font-size: 26px; font-weight: 300; color: var(--white); margin-bottom: 12px; }
+.footer-tagline { font-size: 13px; font-weight: 300; color: var(--muted); line-height: 1.7; }
+.footer-col-label { font-size: 9px; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: var(--orange); margin-bottom: 18px; }
+.footer-links { list-style: none; }
+.footer-links li { margin-bottom: 10px; }
+.footer-links a { font-size: 13px; font-weight: 300; color: var(--muted); transition: color 0.2s; }
+.footer-links a:hover { color: var(--white); }
+.footer-bottom { display: flex; justify-content: space-between; }
+.footer-copy { font-size: 11px; color: rgba(255,255,255,0.2); }
+
+@media (max-width: 900px) {
+  nav { padding: 18px 24px; } .nav-links { display: none; }
+  .page { grid-template-columns: 1fr; }
+  .info { position: static; height: auto; padding: 110px 24px 60px; border-right: none; border-bottom: 1px solid var(--border); }
+  .form-side { padding: 60px 24px 80px; }
+  .form-wrap { max-width: 100%; }
+  footer { padding: 60px 24px 40px; }
+  .footer-top { grid-template-columns: 1fr; gap: 36px; }
+  .cursor, .cursor-ring { display: none; } body { cursor: auto; }
+}
+
+  .ig-link {
+    display: inline-flex; align-items: center;
+    color: var(--off); transition: color 0.25s;
+  }
+  .ig-link:hover { color: var(--orange); }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cur"></div>
+<div class="cursor-ring" id="ring"></div>
+
+<nav>
+  <a href="/" class="nav-logo">Danny <span>Disha</span></a>
+  <ul class="nav-links">
+    <li><a href="/about">За мен</a></li>
+    <li><a href="/individual-therapies">Индивидуални терапии</a></li>
+    <li><a href="/for-companies">За компании</a></li>
+    <li><a href="/contact" class="nav-cta">Запиши час</a></li>
+  </ul>
+</nav>
+
+<main class="page">
+
+  <!-- LEFT -->
+  <div class="info">
+    <div class="info-top">
+      <div class="info-eyebrow">Контакт</div>
+      <h1 class="info-h1">Запиши час —<br>позволи да се<br><em>погрижим за теб.</em></h1>
+      <p class="info-sub">Не е нужно да знаеш точно какво търсиш. Попълни формата и ще се свържа с теб до 24 часа.</p>
+      <div class="info-details">
+        <div class="info-detail">
+          <div class="info-detail-label">Телефон</div>
+          <div class="info-detail-val"><a href="tel:+359000000000" style="color:var(--off);transition:color 0.2s" onmouseenter="this.style.color='var(--orange)'" onmouseleave="this.style.color='var(--off)'">+359 00 000 0000</a></div>
+        </div>
+        <div class="info-detail">
+          <div class="info-detail-label">Отговор</div>
+          <div class="info-detail-val">До 24 часа</div>
+        </div>
+        <div class="info-detail">
+          <div class="info-detail-label">Сесии</div>
+          <div class="info-detail-val">Само с предварително записване</div>
+        </div>
+        <div class="info-detail">
+          <div class="info-detail-label">Instagram</div>
+          <div class="info-detail-val">
+            <a href="https://instagram.com/dannydisha" target="_blank" class="ig-link">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:8px"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+              @dannydisha
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="info-bottom">
+      <p class="info-bottom-text">„Регулацията предхожда<br>устойчивото представяне."</p>
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="form-side">
+    <div class="form-wrap">
+
+      <div id="formEl">
+        <div class="form-group">
+          <label class="form-label">Тип запитване</label>
+          <div class="form-type-grid">
+            <button class="form-type-btn selected" onclick="selectType(this)">Индивидуална терапия</button>
+            <button class="form-type-btn" onclick="selectType(this)">Office Wellness</button>
+            <button class="form-type-btn" onclick="selectType(this)">Лекция / Обучение</button>
+            <button class="form-type-btn" onclick="selectType(this)">Corporate Retreat</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="name">Име</label>
+          <input class="form-input" type="text" id="name" placeholder="Твоето име" autocomplete="name">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="email">Имейл</label>
+          <input class="form-input" type="email" id="email" placeholder="email@example.com" autocomplete="email">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="phone">Телефон <span style="color:var(--muted);font-size:9px;letter-spacing:0">(по желание)</span></label>
+          <input class="form-input" type="tel" id="phone" placeholder="+359 ..." autocomplete="tel">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="message">Съобщение</label>
+          <textarea class="form-textarea" id="message" placeholder="Разкажи ми накратко какво те интересува..."></textarea>
+        </div>
+
+        <button class="form-submit" onclick="submitForm()">Изпрати запитване</button>
+        <p class="form-note">Ще се свържа с теб до 24 часа.</p>
+      </div>
+
+      <div class="form-success" id="successMsg">
+        <div class="form-success-icon">✓</div>
+        <div class="form-success-title">Получено.</div>
+        <p class="form-success-sub">Благодаря за запитването.<br>Ще се свържа с теб до 24 часа.</p>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-logo">Danny Disha</div>
+      <p class="footer-tagline">Тяло. Психика. Регулация.<br>София, България</p>
+    </div>
+    <div>
+      <div class="footer-col-label">Услуги</div>
+      <ul class="footer-links">
+        <li><a href="/individual-therapies">Индивидуални терапии</a></li>
+        <li><a href="/for-companies/office-wellness">Office Wellness</a></li>
+        <li><a href="/for-companies/lectures-training">Лекции & Обучения</a></li>
+        <li><a href="/for-companies/corporate-retreats">Corporate Retreats</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-label">Навигация</div>
+      <ul class="footer-links">
+        <li><a href="/about">За мен</a></li>
+        <li><a href="/contact">Контакт</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2025 Даниел Липчев. Всички права запазени.</span>
+    <span class="footer-copy">dannydisha.com</span>
+  </div>
+</footer>
+
+<script>
+const cur=document.getElementById('cur'), ring=document.getElementById('ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+(function anim(){rx+=(mx-rx)*0.12;ry+=(my-ry)*0.12;cur.style.left=mx+'px';cur.style.top=my+'px';ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(anim);})();
+document.querySelectorAll('a,button,input,textarea').forEach(el=>{
+  el.addEventListener('mouseenter',()=>document.body.classList.add('hovering'));
+  el.addEventListener('mouseleave',()=>document.body.classList.remove('hovering'));
+});
+
+function selectType(btn) {
+  document.querySelectorAll('.form-type-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+
+function submitForm() {
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  if (!name || !email) {
+    document.getElementById('name').style.borderBottomColor = !name ? 'rgba(232,115,42,0.6)' : '';
+    document.getElementById('email').style.borderBottomColor = !email ? 'rgba(232,115,42,0.6)' : '';
+    return;
+  }
+  document.getElementById('formEl').style.opacity = '0';
+  document.getElementById('formEl').style.transform = 'translateY(-10px)';
+  document.getElementById('formEl').style.transition = 'opacity 0.4s, transform 0.4s';
+  setTimeout(() => {
+    document.getElementById('formEl').style.display = 'none';
+    document.getElementById('successMsg').classList.add('show');
+    document.getElementById('successMsg').style.opacity = '0';
+    document.getElementById('successMsg').style.transform = 'translateY(10px)';
+    document.getElementById('successMsg').style.transition = 'opacity 0.5s, transform 0.5s';
+    setTimeout(() => {
+      document.getElementById('successMsg').style.opacity = '1';
+      document.getElementById('successMsg').style.transform = 'translateY(0)';
+    }, 50);
+  }, 400);
+}
+</script>
+</body>
+</html>
